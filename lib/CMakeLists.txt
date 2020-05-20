@@ -1,18 +1,30 @@
 cmake_minimum_required(VERSION 3.8)
 
-project(libNabla)
+#-------------------------------------------------
+# Project 
+#-------------------------------------------------
+
+project(nabla)
+
+#-------------------------------------------------
+# Options
+#-------------------------------------------------
 
 option(COMPILE_TESTS        "Execute compile-time tests"     ON)
+
+set(CMAKE_CXX_STANDARD 17)
+
+#-------------------------------------------------
+# Env and Cpputest
+#-------------------------------------------------
 
 include(${CMAKE_SOURCE_DIR}/cmake/FindCppuTest.cmake)
 
 include(${CMAKE_SOURCE_DIR}/cmake/SetEnv.cmake)
 
-set(CMAKE_CXX_STANDARD 17)
-
-##################################################
+#-------------------------------------------------
 # Set include directories
-##################################################
+#-------------------------------------------------
 
 include_directories(${CMAKE_SOURCE_DIR}/assembler)
 include_directories(${PROJECT_SOURCE_DIR}/bytegen)
@@ -24,9 +36,9 @@ include_directories(${CMAKE_SOURCE_DIR}/scopetree)
 include_directories(${CMAKE_SOURCE_DIR}/vsys)
 include_directories(${CMAKE_SOURCE_DIR}/vsys/hardware)
 
-##################################################
+#-------------------------------------------------
 # Add Library Headers / Sources
-##################################################
+#-------------------------------------------------
 
 set(HEADERS
     ${CMAKE_SOURCE_DIR}/assembler/assembler.hpp
@@ -67,22 +79,22 @@ set(SOURCES
     ${CMAKE_SOURCE_DIR}/vsys/hardware/VSysExternalHost.cpp
 )
 
-##################################################
+#-------------------------------------------------
 # Configure Library
-##################################################
+#-------------------------------------------------
 
 include(${CMAKE_SOURCE_DIR}/cmake/LibraryConfig.cmake)
 
-##################################################
+#-------------------------------------------------
 # Tests
-##################################################
+#-------------------------------------------------
 
 if(COMPILE_TESTS)
         add_subdirectory(tests)
 endif()
 
-##################################################
+#-------------------------------------------------
 # Configure Install
-##################################################
+#-------------------------------------------------
 
 include(${CMAKE_SOURCE_DIR}/cmake/InstallConfig.cmake)
