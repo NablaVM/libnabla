@@ -9,7 +9,7 @@ The development library for the NablaVM
 ### Build Instructions
 
     mkdir build && cd build
-    cmake ../
+    cmake ../lib
     make -j4 
     sudo make install
     cd -
