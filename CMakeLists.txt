@@ -14,66 +14,57 @@ set(CMAKE_CXX_STANDARD 17)
 # Set include directories
 ##################################################
 
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/bytegen)
-
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/sockets)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/util)
-
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/json)
-
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/projectfs)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/scopetree)
-
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/vsys)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/vsys/hardware)
+include_directories(${CMAKE_SOURCE_DIR}/assembler)
+include_directories(${PROJECT_SOURCE_DIR}/bytegen)
+include_directories(${CMAKE_SOURCE_DIR}/sockets)
+include_directories(${CMAKE_SOURCE_DIR}/util)
+include_directories(${CMAKE_SOURCE_DIR}/json)
+include_directories(${CMAKE_SOURCE_DIR}/projectfs)
+include_directories(${CMAKE_SOURCE_DIR}/scopetree)
+include_directories(${CMAKE_SOURCE_DIR}/vsys)
+include_directories(${CMAKE_SOURCE_DIR}/vsys/hardware)
 
 ##################################################
 # Add Library Headers / Sources
 ##################################################
 
 set(HEADERS
-    bytegen/bytegen.hpp
-
-    util/util.h
-    sockets/sockets.h
-    sockets/sockpool.h
-
-    json/json.hpp
-
-    scopetree/scopetree.hpp
-
-    projectfs/projectfs.hpp
-    projectfs/projecttype.hpp
-    projectfs/projectstructure.hpp
-
-    vsys/VSysExecutionContext.hpp
-    vsys/VSysExecutionReturns.hpp
-    vsys/VSysMachine.hpp
-    vsys/VSysMemory.hpp
-    vsys/VSysSettings.hpp
-    vsys/VSysLoadableMachine.hpp
-    vsys/hardware/VSysExternalIO.hpp
-    vsys/hardware/VSysExternalNet.hpp
-    vsys/hardware/VSysExternalHost.hpp
+    ${CMAKE_SOURCE_DIR}/assembler/assembler.hpp
+    ${CMAKE_SOURCE_DIR}/bytegen/bytegen.hpp
+    ${CMAKE_SOURCE_DIR}/util/util.h
+    ${CMAKE_SOURCE_DIR}/sockets/sockets.h
+    ${CMAKE_SOURCE_DIR}/sockets/sockpool.h
+    ${CMAKE_SOURCE_DIR}/json/json.hpp
+    ${CMAKE_SOURCE_DIR}/scopetree/scopetree.hpp
+    ${CMAKE_SOURCE_DIR}/projectfs/projectfs.hpp
+    ${CMAKE_SOURCE_DIR}/projectfs/projecttype.hpp
+    ${CMAKE_SOURCE_DIR}/projectfs/projectstructure.hpp
+    ${CMAKE_SOURCE_DIR}/vsys/VSysExecutionContext.hpp
+    ${CMAKE_SOURCE_DIR}/vsys/VSysExecutionReturns.hpp
+    ${CMAKE_SOURCE_DIR}/vsys/VSysMachine.hpp
+    ${CMAKE_SOURCE_DIR}/vsys/VSysMemory.hpp
+    ${CMAKE_SOURCE_DIR}/vsys/VSysSettings.hpp
+    ${CMAKE_SOURCE_DIR}/vsys/VSysLoadableMachine.hpp
+    ${CMAKE_SOURCE_DIR}/vsys/hardware/VSysExternalIO.hpp
+    ${CMAKE_SOURCE_DIR}/vsys/hardware/VSysExternalNet.hpp
+    ${CMAKE_SOURCE_DIR}/vsys/hardware/VSysExternalHost.hpp
 )
 
 set(SOURCES
-    bytegen/bytegen.cpp
-
-    util/util.c
-    sockets/sockets.c
-    sockets/sockpool.c
-
-    scopetree/scopetree.cpp
-    projectfs/projectfs.cpp
-    projectfs/projectstructure.cpp
-    
-    vsys/VSysExecutionContext.cpp
-    vsys/VSysMachine.cpp
-    vsys/VSysLoadableMachine.cpp
-    vsys/hardware/VSysExternalIO.cpp
-    vsys/hardware/VSysExternalNet.cpp
-    vsys/hardware/VSysExternalHost.cpp
+    ${CMAKE_SOURCE_DIR}/assembler/assembler.cpp
+    ${CMAKE_SOURCE_DIR}/bytegen/bytegen.cpp
+    ${CMAKE_SOURCE_DIR}/util/util.c
+    ${CMAKE_SOURCE_DIR}/sockets/sockets.c
+    ${CMAKE_SOURCE_DIR}/sockets/sockpool.c
+    ${CMAKE_SOURCE_DIR}/scopetree/scopetree.cpp
+    ${CMAKE_SOURCE_DIR}/projectfs/projectfs.cpp
+    ${CMAKE_SOURCE_DIR}/projectfs/projectstructure.cpp
+    ${CMAKE_SOURCE_DIR}/vsys/VSysExecutionContext.cpp
+    ${CMAKE_SOURCE_DIR}/vsys/VSysMachine.cpp
+    ${CMAKE_SOURCE_DIR}/vsys/VSysLoadableMachine.cpp
+    ${CMAKE_SOURCE_DIR}/vsys/hardware/VSysExternalIO.cpp
+    ${CMAKE_SOURCE_DIR}/vsys/hardware/VSysExternalNet.cpp
+    ${CMAKE_SOURCE_DIR}/vsys/hardware/VSysExternalHost.cpp
 )
 
 ##################################################

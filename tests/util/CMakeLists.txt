@@ -6,10 +6,8 @@ link_directories(${CPPUTEST_LIBRARIES})
 
 include_directories(../)
 
-include_directories(${NABLA_LIBC_INCLUDES})
-
 add_executable(nablaUtilityTests
-        ${NABLA_LIBC_SOURCES}
+        ${SOURCES}
         utilTests.cpp
         main.cpp
 )

@@ -6,12 +6,8 @@ link_directories(${CPPUTEST_LIBRARIES})
 
 include_directories(../)
 
-include_directories(${NABLA_LIBCPP_INCLUDES})
-include_directories(${NABLA_LIBC_INCLUDES})
-
 add_executable(nablaVsysTests
-        ${NABLA_LIBCPP_SOURCES}
-        ${NABLA_LIBC_SOURCES}
+        ${SOURCES}
         automatedExecutionTests.cpp
         arithTests.cpp
         bitwiseTests.cpp

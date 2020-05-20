@@ -1,6 +1,6 @@
 # Select library type
 set(_PN ${PROJECT_NAME})
-option(BUILD_SHARED_LIBS "Build ${_PN} as a shared library." ON)
+option(BUILD_SHARED_LIBS "Build ${_PN} as a shared library." OFF)
 if(BUILD_SHARED_LIBS)
   set(LIBRARY_TYPE SHARED)
 else()
@@ -30,7 +30,7 @@ install(TARGETS ${LIBRARY_NAME}
 
 # Create 'version.h'
 configure_file(version.hpp.in
-  "${CMAKE_CURRENT_BINARY_DIR}/version.h" @ONLY)
+  "${CMAKE_CURRENT_BINARY_DIR}/version.hpp" @ONLY)
 set(HEADERS ${HEADERS} ${CMAKE_CURRENT_BINARY_DIR}/version.hpp)
 
 # Install headers
