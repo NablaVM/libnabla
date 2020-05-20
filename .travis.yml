@@ -31,9 +31,9 @@ script:
   - export CXX=g++-9
 
   - cd $PARENTDIR/build
-  - cmake $PARENTDIR/src -DCMAKE_BUILD_TYPE=Debug
+  - cmake $PARENTDIR/lib -DCMAKE_BUILD_TYPE=Debug
   - make -j9
 
   - cd $PARENTDIR/build-release
-  - cmake $PARENTDIR/src -DCMAKE_BUILD_TYPE=Release
+  - cmake $PARENTDIR/lib -DCMAKE_BUILD_TYPE=Release
   - make -j9
