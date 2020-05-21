@@ -4,7 +4,7 @@ cmake_minimum_required(VERSION 3.8)
 # Project 
 #-------------------------------------------------
 
-project(nabla)
+project(libnabla)
 
 #-------------------------------------------------
 # Options
@@ -51,12 +51,14 @@ set(HEADERS
     ${CMAKE_SOURCE_DIR}/projectfs/projectfs.hpp
     ${CMAKE_SOURCE_DIR}/projectfs/projecttype.hpp
     ${CMAKE_SOURCE_DIR}/projectfs/projectstructure.hpp
+    ${CMAKE_SOURCE_DIR}/vsys/VSysInstructions.hpp
     ${CMAKE_SOURCE_DIR}/vsys/VSysExecutionContext.hpp
     ${CMAKE_SOURCE_DIR}/vsys/VSysExecutionReturns.hpp
     ${CMAKE_SOURCE_DIR}/vsys/VSysMachine.hpp
     ${CMAKE_SOURCE_DIR}/vsys/VSysMemory.hpp
     ${CMAKE_SOURCE_DIR}/vsys/VSysSettings.hpp
     ${CMAKE_SOURCE_DIR}/vsys/VSysLoadableMachine.hpp
+    ${CMAKE_SOURCE_DIR}/vsys/hardware/VSysExternalIf.hpp
     ${CMAKE_SOURCE_DIR}/vsys/hardware/VSysExternalIO.hpp
     ${CMAKE_SOURCE_DIR}/vsys/hardware/VSysExternalNet.hpp
     ${CMAKE_SOURCE_DIR}/vsys/hardware/VSysExternalHost.hpp
