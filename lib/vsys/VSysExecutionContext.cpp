@@ -79,9 +79,9 @@ namespace VSYS
 
             if(poi >=  this->contextFunctions[this->currentInstructionBlock].instructions->size())
             {
-    #ifdef NABLA_VIRTUAL_MACHINE_DEBUG_OUTPUT
-                printf("Current instruction stack empty, attempting to force a return.\n");
-    #endif
+#ifdef NABLA_VIRTUAL_MACHINE_DEBUG_OUTPUT
+                std::cout << "Current instruction stack empty, attempting to force a return" << std::endl;
+#endif
                 if(!attempt_return())
                 {
                     this->contextCompleted = true;
@@ -119,9 +119,9 @@ namespace VSYS
                 case INS_NOP:
                 {
                     // No op
-    #ifdef NABLA_VIRTUAL_MACHINE_DEBUG_OUTPUT
-                    printf("nop\n");
-    #endif
+#ifdef NABLA_VIRTUAL_MACHINE_DEBUG_OUTPUT
+                    std::cout << "NOP" << std::endl;
+#endif
                     break;
                 }
                 case INS_LSH :
@@ -130,9 +130,9 @@ namespace VSYS
                     get_arith_lhs_rhs(id, ins, &lhs, &rhs);
                     this->registers[dest] = (lhs << rhs);
 
-    #ifdef NABLA_VIRTUAL_MACHINE_DEBUG_OUTPUT
-                    printf("LSH : result: %ld\n", this->registers[dest]);
-    #endif
+#ifdef NABLA_VIRTUAL_MACHINE_DEBUG_OUTPUT
+                    std::cout << "LSH : Result : " << this->registers[dest] << std::endl;
+#endif
                     break;
                 } 
 
@@ -142,9 +142,9 @@ namespace VSYS
                     get_arith_lhs_rhs(id, ins, &lhs, &rhs);
                     this->registers[dest] = (lhs >> rhs);
 
-    #ifdef NABLA_VIRTUAL_MACHINE_DEBUG_OUTPUT
-                    printf("RSH : result: %ld\n", this->registers[dest]);
-    #endif
+#ifdef NABLA_VIRTUAL_MACHINE_DEBUG_OUTPUT
+                    std::cout << "RSH : Result : " << this->registers[dest] << std::endl;
+#endif
                     break;
                 } 
 
@@ -153,9 +153,10 @@ namespace VSYS
                     uint8_t dest =  util_extract_byte(ins, 6);
                     get_arith_lhs_rhs(id, ins, &lhs, &rhs);
                     this->registers[dest] = (lhs & rhs);
-    #ifdef NABLA_VIRTUAL_MACHINE_DEBUG_OUTPUT
-                    printf("AND : result: %ld\n", this->registers[dest]);
-    #endif
+
+#ifdef NABLA_VIRTUAL_MACHINE_DEBUG_OUTPUT
+                    std::cout << "AND : Result : " << this->registers[dest] << std::endl;
+#endif
                     break;
                 } 
 
@@ -164,9 +165,10 @@ namespace VSYS
                     uint8_t dest =  util_extract_byte(ins, 6);
                     get_arith_lhs_rhs(id, ins, &lhs, &rhs);
                     this->registers[dest] = (lhs | rhs);
-    #ifdef NABLA_VIRTUAL_MACHINE_DEBUG_OUTPUT
-                    printf("OR : result: %ld\n", this->registers[dest]);
-    #endif
+
+#ifdef NABLA_VIRTUAL_MACHINE_DEBUG_OUTPUT
+                    std::cout << "OR : Result : " << this->registers[dest] << std::endl;
+#endif
                     break;
                 } 
 
@@ -175,9 +177,10 @@ namespace VSYS
                     uint8_t dest =  util_extract_byte(ins, 6);
                     get_arith_lhs_rhs(id, ins, &lhs, &rhs);
                     this->registers[dest] = (lhs ^ rhs);
-    #ifdef NABLA_VIRTUAL_MACHINE_DEBUG_OUTPUT
-                    printf("XOR : result: %ld\n", this->registers[dest]);
-    #endif
+
+#ifdef NABLA_VIRTUAL_MACHINE_DEBUG_OUTPUT
+                    std::cout << "XOR : Result : " << this->registers[dest] << std::endl;
+#endif
                     break;
                 } 
 
@@ -187,9 +190,9 @@ namespace VSYS
                     get_arith_lhs_rhs(id, ins, &lhs, &rhs);
                     this->registers[dest] = (~lhs);
 
-    #ifdef NABLA_VIRTUAL_MACHINE_DEBUG_OUTPUT
-                    printf("NOT : result: %ld\n", this->registers[dest]);
-    #endif
+#ifdef NABLA_VIRTUAL_MACHINE_DEBUG_OUTPUT
+                    std::cout << "NOT : Result : " << this->registers[dest] << std::endl;
+#endif
                     break;
                 } 
 
@@ -200,9 +203,9 @@ namespace VSYS
                     get_arith_lhs_rhs(id, ins, &lhs, &rhs);
                     this->registers[dest] = lhs+rhs;
 
-    #ifdef NABLA_VIRTUAL_MACHINE_DEBUG_OUTPUT
-                    printf("INS_ADD: result: %ld , DEST : %u\n", this->registers[dest], dest);
-    #endif
+#ifdef NABLA_VIRTUAL_MACHINE_DEBUG_OUTPUT
+                    std::cout << "INS_ADD : Result : " << this->registers[dest] << " | Dest : " << (int)dest << std::endl;
+#endif
                     break;
                 }          
                 case INS_SUB  :
@@ -212,9 +215,9 @@ namespace VSYS
                     get_arith_lhs_rhs(id, ins, &lhs, &rhs);
                     this->registers[dest] = lhs-rhs;
 
-    #ifdef NABLA_VIRTUAL_MACHINE_DEBUG_OUTPUT
-                    printf("INS_SUB: result: %ld , DEST : %u\n", this->registers[dest], dest);
-    #endif
+#ifdef NABLA_VIRTUAL_MACHINE_DEBUG_OUTPUT
+                    std::cout << "INS_SUB : Result : " << this->registers[dest] << " | Dest : " << (int)dest << std::endl;
+#endif
                     break;
                 }          
                 case INS_MUL  :
@@ -224,9 +227,9 @@ namespace VSYS
                     get_arith_lhs_rhs(id, ins, &lhs, &rhs);
                     this->registers[dest] = lhs*rhs;
 
-    #ifdef NABLA_VIRTUAL_MACHINE_DEBUG_OUTPUT
-                    printf("INS_MUL: result: %ld , DEST : %u\n", this->registers[dest], dest);
-    #endif
+#ifdef NABLA_VIRTUAL_MACHINE_DEBUG_OUTPUT
+                    std::cout << "INS_MUL : Result : " << this->registers[dest] << " | Dest : " << (int)dest << std::endl;
+#endif
                     break;
                 }          
                 case INS_DIV  :
@@ -238,9 +241,9 @@ namespace VSYS
                     if(rhs == 0){ this->registers[dest] = 0; }
                     else { this->registers[dest] = lhs/rhs; }
                     
-    #ifdef NABLA_VIRTUAL_MACHINE_DEBUG_OUTPUT
-                    printf("INS_DIV result: %ld , DEST : %u\n", this->registers[dest], dest);
-    #endif
+#ifdef NABLA_VIRTUAL_MACHINE_DEBUG_OUTPUT
+                    std::cout << "INS_DIV : Result : " << this->registers[dest] << " | Dest : " << (int)dest << std::endl;
+#endif
                     break;
                 }          
                 case INS_ADDD :
@@ -252,9 +255,9 @@ namespace VSYS
                 
                     this->registers[dest] = util_convert_double_to_uint64( util_convert_uint64_to_double(lhs) + util_convert_uint64_to_double(rhs));
 
-    #ifdef NABLA_VIRTUAL_MACHINE_DEBUG_OUTPUT
-                    printf("Result : %f\n", util_convert_uint64_to_double(lhs) + util_convert_uint64_to_double(rhs));
-    #endif
+#ifdef NABLA_VIRTUAL_MACHINE_DEBUG_OUTPUT
+                    std::cout << "INS_ADDD : Result : " << util_convert_uint64_to_double(lhs) + util_convert_uint64_to_double(rhs) << " | Dest : " << (int)dest << std::endl;
+#endif
                     break;
                 }          
                 case INS_SUBD :
@@ -266,9 +269,9 @@ namespace VSYS
                 
                     this->registers[dest] = util_convert_double_to_uint64( util_convert_uint64_to_double(lhs) - util_convert_uint64_to_double(rhs));
 
-    #ifdef NABLA_VIRTUAL_MACHINE_DEBUG_OUTPUT
-                    printf("Result : %f\n", util_convert_uint64_to_double(lhs) - util_convert_uint64_to_double(rhs));
-    #endif
+#ifdef NABLA_VIRTUAL_MACHINE_DEBUG_OUTPUT
+                    std::cout << "INS_SUBD : Result : " << util_convert_uint64_to_double(lhs) - util_convert_uint64_to_double(rhs) << " | Dest : " << (int)dest << std::endl;
+#endif
                     break;
                 }          
                 case INS_MULD :
@@ -280,9 +283,9 @@ namespace VSYS
                 
                     this->registers[dest] = util_convert_double_to_uint64( util_convert_uint64_to_double(lhs) * util_convert_uint64_to_double(rhs));
 
-    #ifdef NABLA_VIRTUAL_MACHINE_DEBUG_OUTPUT
-                    printf("Result : %f\n", util_convert_uint64_to_double(lhs) * util_convert_uint64_to_double(rhs));
-    #endif
+#ifdef NABLA_VIRTUAL_MACHINE_DEBUG_OUTPUT
+                    std::cout << "INS_MULD : Result : " << util_convert_uint64_to_double(lhs) * util_convert_uint64_to_double(rhs) << " | Dest : " << (int)dest << std::endl;
+#endif
                     break;
                 }          
                 case INS_DIVD :
@@ -294,9 +297,9 @@ namespace VSYS
                 
                     this->registers[dest] = util_convert_double_to_uint64( util_convert_uint64_to_double(lhs) / util_convert_uint64_to_double(rhs));
 
-    #ifdef NABLA_VIRTUAL_MACHINE_DEBUG_OUTPUT
-                    printf("Result : %f\n", util_convert_uint64_to_double(lhs) / util_convert_uint64_to_double(rhs));
-    #endif
+#ifdef NABLA_VIRTUAL_MACHINE_DEBUG_OUTPUT
+                    std::cout << "INS_DIVD : Result : " << util_convert_uint64_to_double(lhs) / util_convert_uint64_to_double(rhs) << " | Dest : " << (int)dest << std::endl;
+#endif
                     break;
                 }          
                 case INS_BGT  :
@@ -307,11 +310,9 @@ namespace VSYS
                     uint64_t branchAddr = (uint64_t)util_extract_two_bytes(ins, 4) << 16 | 
                                           (uint64_t)util_extract_two_bytes(ins, 2);
                     
-
-    #ifdef NABLA_VIRTUAL_MACHINE_DEBUG_OUTPUT
-                    printf("BGT : %i\n", lhs > rhs);
-    #endif
-
+#ifdef NABLA_VIRTUAL_MACHINE_DEBUG_OUTPUT
+                    std::cout << "BGT : " << (lhs > rhs) << std::endl;
+#endif
                     if(lhs > rhs){ this->contextFunctions[
                         this->currentInstructionBlock
                         ].instruction_pointer = branchAddr; continue; }
@@ -325,12 +326,9 @@ namespace VSYS
                     uint64_t branchAddr = (uint64_t)util_extract_two_bytes(ins, 4) << 16 | 
                                           (uint64_t)util_extract_two_bytes(ins, 2);
                     
-
-    #ifdef NABLA_VIRTUAL_MACHINE_DEBUG_OUTPUT
-                    printf("BGTE : %i\n", lhs >= rhs);
-    #endif
-
-                    
+#ifdef NABLA_VIRTUAL_MACHINE_DEBUG_OUTPUT
+                    std::cout << "BGTE : " << (lhs >= rhs) << std::endl;
+#endif
                     if(lhs >= rhs){ this->contextFunctions[
                         this->currentInstructionBlock
                         ].instruction_pointer = branchAddr; continue; }
@@ -344,13 +342,9 @@ namespace VSYS
                     uint64_t branchAddr = (uint64_t)util_extract_two_bytes(ins, 4) << 16 | 
                                           (uint64_t)util_extract_two_bytes(ins, 2);
                     
-
-    #ifdef NABLA_VIRTUAL_MACHINE_DEBUG_OUTPUT
-                    printf("BLT : %i\n", lhs < rhs);
-    #endif
-
-                    
-                    
+#ifdef NABLA_VIRTUAL_MACHINE_DEBUG_OUTPUT
+                    std::cout << "BLT : " << (lhs < rhs) << std::endl;
+#endif
                     if(lhs < rhs){ this->contextFunctions[
                         this->currentInstructionBlock
                         ].instruction_pointer = branchAddr; continue; }
@@ -364,13 +358,9 @@ namespace VSYS
                     uint64_t branchAddr = (uint64_t)util_extract_two_bytes(ins, 4) << 16 | 
                                           (uint64_t)util_extract_two_bytes(ins, 2);
                     
-
-    #ifdef NABLA_VIRTUAL_MACHINE_DEBUG_OUTPUT
-                    printf("BLTE : %i\n", lhs <= rhs);
-    #endif
-
-                    
-                    
+#ifdef NABLA_VIRTUAL_MACHINE_DEBUG_OUTPUT
+                    std::cout << "BLTE : " << (lhs <= rhs) << std::endl;
+#endif
                     if(lhs <= rhs){ this->contextFunctions[
                         this->currentInstructionBlock
                         ].instruction_pointer = branchAddr; continue; }
@@ -384,13 +374,9 @@ namespace VSYS
                     uint64_t branchAddr = (uint64_t)util_extract_two_bytes(ins, 4) << 16 | 
                                           (uint64_t)util_extract_two_bytes(ins, 2);
 
-                    
-
-    #ifdef NABLA_VIRTUAL_MACHINE_DEBUG_OUTPUT
-                    printf("BEQ : %i\n", lhs == rhs);
-    #endif
-
-                    
+#ifdef NABLA_VIRTUAL_MACHINE_DEBUG_OUTPUT
+                    std::cout << "BEQ : " << (lhs == rhs) << std::endl;
+#endif
                     if(lhs == rhs){ this->contextFunctions[
                         this->currentInstructionBlock
                         ].instruction_pointer = branchAddr; continue; }
@@ -403,14 +389,10 @@ namespace VSYS
 
                     uint64_t branchAddr = (uint64_t)util_extract_two_bytes(ins, 4) << 16 | 
                                           (uint64_t)util_extract_two_bytes(ins, 2);
-                    
-
-    #ifdef NABLA_VIRTUAL_MACHINE_DEBUG_OUTPUT
-                    printf("BNE : %i\n", lhs != rhs);
-    #endif
-
-                    
-
+                
+#ifdef NABLA_VIRTUAL_MACHINE_DEBUG_OUTPUT
+                    std::cout << "BNE : " << (lhs != rhs) << std::endl;
+#endif
                     if(lhs != rhs){ this->contextFunctions[
                         this->currentInstructionBlock
                         ].instruction_pointer = branchAddr; continue; }
@@ -427,6 +409,9 @@ namespace VSYS
                     uint64_t branchAddr = (uint64_t)util_extract_two_bytes(ins, 4) << 16 | 
                                           (uint64_t)util_extract_two_bytes(ins, 2);
 
+#ifdef NABLA_VIRTUAL_MACHINE_DEBUG_OUTPUT
+                    std::cout << "BGTD : " << (lhs_d > rhs_d) << std::endl;
+#endif
                     if(lhs_d > rhs_d){ this->contextFunctions[
                         this->currentInstructionBlock
                         ].instruction_pointer = branchAddr; continue; }
@@ -443,6 +428,9 @@ namespace VSYS
                     uint64_t branchAddr = (uint64_t)util_extract_two_bytes(ins, 4) << 16 | 
                                           (uint64_t)util_extract_two_bytes(ins, 2);
 
+#ifdef NABLA_VIRTUAL_MACHINE_DEBUG_OUTPUT
+                    std::cout << "BGTED : " << (lhs_d >= rhs_d) << std::endl;
+#endif
                     if(lhs_d >= rhs_d){ this->contextFunctions[
                         this->currentInstructionBlock
                         ].instruction_pointer = branchAddr; continue; }
@@ -459,6 +447,9 @@ namespace VSYS
                     uint64_t branchAddr = (uint64_t)util_extract_two_bytes(ins, 4) << 16 | 
                                           (uint64_t)util_extract_two_bytes(ins, 2);
 
+#ifdef NABLA_VIRTUAL_MACHINE_DEBUG_OUTPUT
+                    std::cout << "BLTD : " << (lhs_d < rhs_d) << std::endl;
+#endif
                     if(lhs_d < rhs_d){ this->contextFunctions[
                         this->currentInstructionBlock
                         ].instruction_pointer = branchAddr; continue; }
@@ -475,6 +466,9 @@ namespace VSYS
                     uint64_t branchAddr = (uint64_t)util_extract_two_bytes(ins, 4) << 16 | 
                                           (uint64_t)util_extract_two_bytes(ins, 2);
 
+#ifdef NABLA_VIRTUAL_MACHINE_DEBUG_OUTPUT
+                    std::cout << "BLTED : " << (lhs_d <= rhs_d) << std::endl;
+#endif
                     if(lhs_d <= rhs_d){ this->contextFunctions[
                         this->currentInstructionBlock
                         ].instruction_pointer = branchAddr; continue; }
@@ -491,6 +485,9 @@ namespace VSYS
                     uint64_t branchAddr = (uint64_t)util_extract_two_bytes(ins, 4) << 16 | 
                                           (uint64_t)util_extract_two_bytes(ins, 2);
 
+#ifdef NABLA_VIRTUAL_MACHINE_DEBUG_OUTPUT
+                    std::cout << "BEQD : " << (util_check_double_equal(lhs_d, rhs_d)) << std::endl;
+#endif
                     if(util_check_double_equal(lhs_d, rhs_d)){ this->contextFunctions[
                         this->currentInstructionBlock
                         ].instruction_pointer = branchAddr; continue; }
@@ -507,6 +504,9 @@ namespace VSYS
                     uint64_t branchAddr = (uint64_t)util_extract_two_bytes(ins, 4) << 16 | 
                                           (uint64_t)util_extract_two_bytes(ins, 2);
 
+#ifdef NABLA_VIRTUAL_MACHINE_DEBUG_OUTPUT
+                    std::cout << "BNED : " << !(util_check_double_equal(lhs_d, rhs_d)) << std::endl;
+#endif
                     if(!util_check_double_equal(lhs_d, rhs_d)){ this->contextFunctions[
                         this->currentInstructionBlock
                         ].instruction_pointer = branchAddr; continue; }
@@ -532,15 +532,15 @@ namespace VSYS
                     }
                     else
                     {
-    #ifdef NABLA_VIRTUAL_MACHINE_DEBUG_OUTPUT
-                        printf("Error: Unknown ID bits expressed in INS_MOV\n");
-    #endif
+#ifdef NABLA_VIRTUAL_MACHINE_DEBUG_OUTPUT
+                        std::cerr << "Error: Unknown ID bits expressed in INS_MOV" << std::endl;
+#endif
                         return ExecutionReturns::UNKNOWN_INSTRUCTION;
                     }
 
-    #ifdef NABLA_VIRTUAL_MACHINE_DEBUG_OUTPUT
+#ifdef NABLA_VIRTUAL_MACHINE_DEBUG_OUTPUT
                     std::cout << "MOV result : " << (int64_t)this->registers[lhs] << std::endl;
-    #endif
+#endif
                     break;
                 }
                 case INS_LDB  :
@@ -564,7 +564,7 @@ namespace VSYS
                     }
                     else
                     {
-                        printf("Invalid 'ldb' instruction id : ID= %u\n", id);
+                        std::cerr << "Invalid 'ldb' instruction : ID = " << id << std::endl;
                         return ExecutionReturns::UNKNOWN_INSTRUCTION;
                     }
                     
@@ -585,7 +585,7 @@ namespace VSYS
                     registers[dest] = val;
 
 #ifdef NABLA_VIRTUAL_MACHINE_DEBUG_OUTPUT
-                    printf("Ldb Result: %lu\n", this->registers[dest]);
+                    std::cout << "LDB : Result : " << this->registers[dest] << " | Dest : " << (int)dest << std::endl;
 #endif
                     break;
                 }
@@ -610,7 +610,7 @@ namespace VSYS
                     }
                     else
                     {
-                        printf("Invalid 'ldw' instruction id : ID= %u\n", id);
+                        std::cerr << "Invalid 'ldw' instruction : ID = " << id << std::endl;
                         return ExecutionReturns::UNKNOWN_INSTRUCTION;
                     }
                     
@@ -631,7 +631,7 @@ namespace VSYS
                     registers[dest] = val;
 
 #ifdef NABLA_VIRTUAL_MACHINE_DEBUG_OUTPUT
-                    printf("Ldw Result: %lu\n", this->registers[dest]);
+                    std::cout << "LDW : Result : " << this->registers[dest] << " | Dest : " << (int)dest << std::endl;
 #endif
                     break;
                 }         
@@ -657,7 +657,7 @@ namespace VSYS
                     }
                     else
                     {
-                        printf("Invalid 'stb' instruction id : ID= %u\n", id);
+                        std::cerr << "Invalid 'stb' instruction : ID = " << id << std::endl;
                         return ExecutionReturns::UNKNOWN_INSTRUCTION;
                     }
 
@@ -667,12 +667,20 @@ namespace VSYS
                     if(stackDest == GLOBAL_STACK)
                     {
                         okay = this->global_memory.set_8(destAddress, val);
+
+#ifdef NABLA_VIRTUAL_MACHINE_DEBUG_OUTPUT
+                    std::cout << "STB : GLOBAL STACK : VAL : " << (int)val << " | Dest : " << destAddress << std::endl;
+#endif
                     }
                     else if ( stackDest == LOCAL_STACK )
                     {
                         okay = this->contextFunctions[currentInstructionBlock].function_memory.set_8(
                             destAddress, val
                         );
+                        
+#ifdef NABLA_VIRTUAL_MACHINE_DEBUG_OUTPUT
+                    std::cout << "STB : LOCAL STACK : VAL : " << (int)val << " | Dest : " << destAddress << std::endl;
+#endif
                     }
                     assert(okay);
                     break;
@@ -699,7 +707,7 @@ namespace VSYS
                     }
                     else
                     {
-                        printf("Invalid 'stw' instruction id : ID= %u\n", id);
+                        std::cerr << "Invalid 'stw' instruction : ID = " << id << std::endl;
                         return ExecutionReturns::UNKNOWN_INSTRUCTION;
                     }
 
@@ -707,16 +715,23 @@ namespace VSYS
                     bool okay = false;
                     uint64_t val =  registers[sourceReg];
 
-
                     if(stackDest == GLOBAL_STACK)
                     {
                         okay = this->global_memory.set_64(destAddress, val);
+                        
+#ifdef NABLA_VIRTUAL_MACHINE_DEBUG_OUTPUT
+                    std::cout << "STW : GLOBAL STACK : VAL : " << val << " | Dest : " << destAddress << std::endl;
+#endif
                     }
                     else if ( stackDest == LOCAL_STACK )
                     {
                         okay = this->contextFunctions[currentInstructionBlock].function_memory.set_64(
                             destAddress, val
                         );
+                        
+#ifdef NABLA_VIRTUAL_MACHINE_DEBUG_OUTPUT
+                    std::cout << "STW : LOCAL STACK : VAL : " << val << " | Dest : " << destAddress << std::endl;
+#endif
                     }
                     assert(okay);
                     break;
@@ -730,12 +745,20 @@ namespace VSYS
                     if(destStack == GLOBAL_STACK)
                     {
                         okay = this->global_memory.push_8((this->registers[sourceReg] & 0x00000000000000FF));
+                        
+#ifdef NABLA_VIRTUAL_MACHINE_DEBUG_OUTPUT
+                    std::cout << "PUSH : GLOBAL STACK : VAL : " << (int)(this->registers[sourceReg] & 0x00000000000000FF) << std::endl;
+#endif
                     }
                     else if (destStack == LOCAL_STACK )
                     {
                         okay = this->contextFunctions[currentInstructionBlock].function_memory.push_8(
                             (this->registers[sourceReg] & 0x00000000000000FF)
                         );
+                        
+#ifdef NABLA_VIRTUAL_MACHINE_DEBUG_OUTPUT
+                    std::cout << "PUSH : LOCAL STACK : VAL : " << (int)(this->registers[sourceReg] & 0x00000000000000FF) << std::endl;
+#endif
                     }
                     assert(okay);
                     break;
@@ -749,12 +772,20 @@ namespace VSYS
                     if(destStack == GLOBAL_STACK)
                     {
                         okay = this->global_memory.push_64(this->registers[sourceReg]);
+                        
+#ifdef NABLA_VIRTUAL_MACHINE_DEBUG_OUTPUT
+                    std::cout << "PUSHW : GLOBAL STACK : VAL : " << this->registers[sourceReg] << std::endl;
+#endif
                     }
                     else if (destStack == LOCAL_STACK )
                     {
                         okay = this->contextFunctions[currentInstructionBlock].function_memory.push_64(
                             this->registers[sourceReg]
                         );
+                        
+#ifdef NABLA_VIRTUAL_MACHINE_DEBUG_OUTPUT
+                    std::cout << "PUSHW : LOCAL STACK : VAL : " << this->registers[sourceReg] << std::endl;
+#endif
                     }
                     assert(okay);
                     break;
@@ -769,12 +800,20 @@ namespace VSYS
                     if(sourceStack == GLOBAL_STACK)
                     {
                         okay = this->global_memory.pop_8(val);
+
+#ifdef NABLA_VIRTUAL_MACHINE_DEBUG_OUTPUT
+                    std::cout << "POP : GLOBAL STACK : VAL : " << (int)val << " | Dest : " << (int)destReg << std::endl;
+#endif
                     }
                     else if (sourceStack == LOCAL_STACK )
                     {
                         okay = this->contextFunctions[currentInstructionBlock].function_memory.pop_8(
                             val
                         );
+                     
+#ifdef NABLA_VIRTUAL_MACHINE_DEBUG_OUTPUT
+                    std::cout << "POP : LOCAL STACK : VAL : " << (int)val << " | Dest : " << (int)destReg << std::endl;
+#endif
                     }
                     
                     assert(okay);
@@ -791,12 +830,20 @@ namespace VSYS
                     if(sourceStack == GLOBAL_STACK)
                     {
                         okay = this->global_memory.pop_64(val);
+                        
+#ifdef NABLA_VIRTUAL_MACHINE_DEBUG_OUTPUT
+                    std::cout << "POPW : GLOBAL STACK : VAL : " << val << " | Dest : " << (int)destReg << std::endl;
+#endif
                     }
                     else if (sourceStack == LOCAL_STACK )
                     {
                         okay = this->contextFunctions[currentInstructionBlock].function_memory.pop_64(
                             val
                         );
+                        
+#ifdef NABLA_VIRTUAL_MACHINE_DEBUG_OUTPUT
+                    std::cout << "POPW : LOCAL STACK : VAL : " << val << " | Dest : " << (int)destReg << std::endl;
+#endif
                     }
                     
                     assert(okay);
@@ -820,13 +867,13 @@ namespace VSYS
                     }
                     else
                     {
-                        printf("Invalid 'size' instruction!\n");
+                        std::cerr << "Invalid 'size' instruction" << std::endl;
                         return ExecutionReturns::UNKNOWN_INSTRUCTION;
                     }
                     
-    #ifdef NABLA_VIRTUAL_MACHINE_DEBUG_OUTPUT
-                    printf("Size Result : %lu\n", this->registers[destReg]);
-    #endif
+#ifdef NABLA_VIRTUAL_MACHINE_DEBUG_OUTPUT
+                    std::cout << "SIZE : Result : " << this->registers[destReg] << " | Dest : " << (int)destReg << std::endl;
+#endif
                     break;
                 }
                 case INS_JUMP :
@@ -843,9 +890,9 @@ namespace VSYS
                 {
                     if(this->callStack.empty())
                     {
-    #ifdef NABLA_VIRTUAL_MACHINE_DEBUG_OUTPUT
-                        printf("Callstack empty on yield. Exiting\n");
-    #endif
+#ifdef NABLA_VIRTUAL_MACHINE_DEBUG_OUTPUT
+                        std::cout << "Callstack empty on yield. Exiting" << std::endl;
+#endif
                         this->contextCompleted = true;
                         return ExecutionReturns::OKAY;
                     }
@@ -873,6 +920,10 @@ namespace VSYS
                                           (uint64_t)util_extract_two_bytes(ins, 4);
 
                     this->callStack.push(func_from);
+
+#ifdef NABLA_VIRTUAL_MACHINE_DEBUG_OUTPUT
+                    std::cout << "INS_CS_SF : From : " << func_from << std::endl;
+#endif
                     break;
                 }
                 case INS_CS_SR :
@@ -882,6 +933,10 @@ namespace VSYS
                                     (uint64_t)util_extract_two_bytes(ins, 4);
                                         
                     this->callStack.push(roi);
+                    
+#ifdef NABLA_VIRTUAL_MACHINE_DEBUG_OUTPUT
+                    std::cout << "INS_CS_SR : ROI : " << roi << std::endl;
+#endif
                     break;
                 }
                 case INS_CALL :
@@ -893,6 +948,10 @@ namespace VSYS
                     currentInstructionBlock = destAddress;
 
                     this->switchingFunction = true;
+
+#ifdef NABLA_VIRTUAL_MACHINE_DEBUG_OUTPUT
+                    std::cout << "INS_CALL : Destination : " << destAddress << std::endl;
+#endif
                     break;
                 }      
                 case INS_PCALL :
@@ -902,10 +961,17 @@ namespace VSYS
                                             (uint64_t)util_extract_two_bytes(ins, 4);
 
                     owner.queueNewExecutionContext(destAddress);
+                    
+#ifdef NABLA_VIRTUAL_MACHINE_DEBUG_OUTPUT
+                    std::cout << "INS_PCALL : Destination : " << destAddress << std::endl;
+#endif
                     break;
                 }
                 case INS_RET  :
-                {
+                {      
+#ifdef NABLA_VIRTUAL_MACHINE_DEBUG_OUTPUT
+                    std::cout << "INS_RET" << std::endl;
+#endif
                     // Attempt a return. If it returns, true will be signaled
                     if(!attempt_return())
                     {
@@ -916,6 +982,9 @@ namespace VSYS
                 }          
                 case INS_EXIT :
                 {
+#ifdef NABLA_VIRTUAL_MACHINE_DEBUG_OUTPUT
+                    std::cout << "INS_EXIT" << std::endl;
+#endif
                     this->contextCompleted = true;
                     return ExecutionReturns::ALL_EXECUTION_COMPLETE;
                 }    
@@ -927,6 +996,10 @@ namespace VSYS
                         this->contextCompleted = true;
                         return ExecutionReturns::OKAY;
                     }
+
+#ifdef NABLA_VIRTUAL_MACHINE_DEBUG_OUTPUT
+                    std::cout << "UNKNOWN INSTRUCTION" << std::endl;
+#endif
                     return ExecutionReturns::UNKNOWN_INSTRUCTION;
                     break; 
                 }
@@ -935,6 +1008,10 @@ namespace VSYS
             // Check for hardware execution. If it fails we need to fail.
             if(!hardware_execution_check())
             {
+
+#ifdef NABLA_VIRTUAL_MACHINE_DEBUG_OUTPUT
+                std::cout << "Hardware execution check failed : UNKNOWN INSTRUCTION " << std::endl;
+#endif
                 return ExecutionReturns::UNKNOWN_INSTRUCTION;
             }
 
@@ -1041,7 +1118,7 @@ namespace VSYS
         if(this->callStack.empty())
         {
 #ifdef NABLA_VIRTUAL_MACHINE_DEBUG_OUTPUT
-            printf("Callstack empty. Exiting\n");
+            std::cout << "Callstack empty. Exiting" << std::endl;
 #endif
             return false;
         }
