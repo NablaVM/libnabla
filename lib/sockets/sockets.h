@@ -9,6 +9,10 @@
 #include<sys/socket.h>
 #include<arpa/inet.h>
 
+#ifdef __cplusplus
+extern "C" { 
+#endif 
+
 //! \brief A struct representing a socket connection
 struct nabla_socket;
 
@@ -101,5 +105,9 @@ void sockets_connectionless_recv(nabla_socket * sender, nabla_socket * recvr, ch
 //! \param result The result of the accept [-1 - Failure, 0 - Success]
 //! \returns TCP socket of the new connection if result = 0, otherwise it will be NULL
 nabla_socket * sockets_accept(nabla_socket *ns, int *result);
+
+#ifdef __cplusplus 
+} 
+#endif 
 
 #endif

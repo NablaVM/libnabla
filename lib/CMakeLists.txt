@@ -11,8 +11,13 @@ project(libnabla)
 #-------------------------------------------------
 
 option(COMPILE_TESTS        "Execute compile-time tests"     ON)
+option(VM_DEBUG_OUTPUT      "Enable VM debug output"        OFF)
 
 set(CMAKE_CXX_STANDARD 17)
+
+if(VM_DEBUG_OUTPUT)
+    add_definitions(-DNABLA_VIRTUAL_MACHINE_DEBUG_OUTPUT)
+endif(VM_DEBUG_OUTPUT)
 
 #-------------------------------------------------
 # Env and Cpputest
