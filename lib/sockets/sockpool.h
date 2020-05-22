@@ -5,6 +5,10 @@
 
 #include <stdint.h>
 
+#ifdef __cplusplus  
+extern "C" { 
+#endif 
+
 //! \brief The socket pool structure
 struct sockpool;
 
@@ -72,5 +76,9 @@ void sockpool_close_socket(sockpool * sp, uint16_t idx);
 //! \returns New socket's index in the pool
 //! \note If the insertion fails, sock pool will NOT close and delete the socket.
 uint16_t sockpool_insert_new(sockpool * sp, nabla_socket * sock, int *result);
+
+#ifdef __cplusplus 
+} 
+#endif 
 
 #endif

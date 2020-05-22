@@ -3,6 +3,10 @@
 
 #include <stdint.h>
 
+#ifdef __cplusplus  
+extern "C" { 
+#endif 
+
 //! \brief Extract a byte from a uint64_t
 //! \param data The data do get the byte from
 //! \param idx  The index of the byte to get
@@ -32,5 +36,9 @@ uint64_t util_convert_double_to_uint64(double val);
 //! \retval 0 The doubles are not equal
 //! \note Uses a precision of 0.00001
 uint8_t util_check_double_equal(double lhs, double rhs);
+
+#ifdef __cplusplus 
+} 
+#endif 
 
 #endif
