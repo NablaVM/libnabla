@@ -660,13 +660,24 @@ inline bool isBranchableLabel(std::string name)
 //
 // -----------------------------------------------
 
+template<typename Numeric>
+inline static bool is_number(const std::string& s)
+{
+    Numeric n;
+    return((std::istringstream(s) >> n >> std::ws).eof());
+}
+
+// -----------------------------------------------
+//
+// -----------------------------------------------
+
 inline bool isConstNameValid(std::string name)
 {
     return std::regex_match(name, std::regex("^[a-zA-Z_0-9]+"));
 }
 
 // -----------------------------------------------
-//
+//  - This isn't used anymore but its being left in case the new impl has a weird issue
 // -----------------------------------------------
 
 inline bool isInteger(std::string name)
@@ -675,7 +686,7 @@ inline bool isInteger(std::string name)
 }
 
 // -----------------------------------------------
-//
+// - This isn't used anymore but its being left in case the new impl has a weird issue
 // -----------------------------------------------
 
 inline bool isDouble(std::string piece)
@@ -2177,7 +2188,7 @@ bool instruction_directive()
         }
 
         // Ensure the thing is an integer
-        if(!isInteger(currentPieces[2]))
+        if(!is_number<int>(currentPieces[2]))   // Updated from isInteger on 5/31/2020
         {
             std::cerr << "Invalid type given to constant .int : " << currentPieces[2] << std::endl;
             return false;
@@ -2262,7 +2273,7 @@ bool instruction_directive()
         }
 
         // Ensure the thing is an double
-        if(!isDouble(currentPieces[2]))
+        if(!is_number<double>(currentPieces[2])) // Updated from isDouble on 5/31/2020
         {
             std::cerr << "Invalid type given to constant .double : " << currentPieces[2] << std::endl;
             return false;
@@ -2276,14 +2287,16 @@ bool instruction_directive()
         }
 
         // Get the int
-        double givenDouble = std::stod(currentPieces[2]);
-
-        if(givenDouble > std::numeric_limits<double>::max()|| givenDouble < std::numeric_limits<double>::min()) 
-        { 
-            std::cout << "Invalid const double size : " << currentLine <<  std::endl; 
+        double givenDouble = 0;
+        try
+        {
+            givenDouble = std::stod(currentPieces[2]);
+        }
+        catch(...)
+        {
+            std::cout << "Invalid const double : " << currentLine <<  std::endl; 
             return false;
-        } 
-
+        }
 
         // Store it
         finalPayload.constants.push_back({currentPieces[1], nablaByteGen.createConstantDouble(givenDouble)});
