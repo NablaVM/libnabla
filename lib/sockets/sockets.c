@@ -4,10 +4,6 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-#ifdef SOCK_NONBLOCK
-   scm_c_define ("SOCK_NONBLOCK", scm_from_int (SOCK_NONBLOCK));
-#endif
-
 struct nabla_socket
 {
     int    socket_desc;
