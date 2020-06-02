@@ -1,7 +1,11 @@
 #ifndef NABLA_IEEE_754_INCLUDE
 #define NABLA_IEEE_754_INCLUDE
 
-#ifdef __APPLE__
+#ifdef __linux__ 
+    #include <ieee754.h>
+#else
+
+// Because APPLE has to be difficult
 union ieee754_double
   {
     double d;
@@ -15,8 +19,6 @@ union ieee754_double
         unsigned int negative:1;
       } ieee;
   };
-#else 
-    #include <ieee754.h>
 #endif
 
 #endif
