@@ -1,9 +1,10 @@
-#ifndef NABLA_IEEE_754_INCLUDE
-#define NABLA_IEEE_754_INCLUDE
 
 #ifdef __linux__ 
     #include <ieee754.h>
 #else
+
+#ifndef NABLA_IEEE_754_INCLUDE
+#define NABLA_IEEE_754_INCLUDE
 
 // Because APPLE has to be difficult
 union ieee754_double
