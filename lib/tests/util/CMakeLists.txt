@@ -12,6 +12,8 @@ add_executable(nablaUtilityTests
         main.cpp
 )
 
+message(${CPPUTEST_LDFLAGS})
+
 target_link_libraries(nablaUtilityTests 
                       ${CPPUTEST_LDFLAGS})
 

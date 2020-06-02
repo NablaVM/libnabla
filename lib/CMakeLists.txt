@@ -31,6 +31,8 @@ include(${CMAKE_SOURCE_DIR}/cmake/SetEnv.cmake)
 # Set include directories
 #-------------------------------------------------
 
+include_directories(/usr/local/include)
+include_directories(${CMAKE_SOURCE_DIR}/ieee)
 include_directories(${CMAKE_SOURCE_DIR}/assembler)
 include_directories(${PROJECT_SOURCE_DIR}/bytegen)
 include_directories(${CMAKE_SOURCE_DIR}/sockets)
@@ -46,6 +48,7 @@ include_directories(${CMAKE_SOURCE_DIR}/vsys/hardware)
 #-------------------------------------------------
 
 set(HEADERS
+    ${CMAKE_SOURCE_DIR}/ieee/ieee754.h
     ${CMAKE_SOURCE_DIR}/assembler/assembler.hpp
     ${CMAKE_SOURCE_DIR}/bytegen/bytegen.hpp
     ${CMAKE_SOURCE_DIR}/util/util.h

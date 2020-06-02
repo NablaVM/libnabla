@@ -6,7 +6,6 @@
 #include "bytegen.hpp"
 #include <random>
 #include <vector>
-#include <ieee754.h>
 #include <limits>
 
 #include "VSysMachine.hpp"
@@ -14,6 +13,8 @@
 #include "VSysExecutionContext.hpp"
 #include "VSysExecutionReturns.hpp"
 #include <vector>
+
+#include "ieee754.h"
 
 // Always include this last
 #include "CppUTest/TestHarness.h"

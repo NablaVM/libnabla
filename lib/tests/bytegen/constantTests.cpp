@@ -2,7 +2,9 @@
 #include "bytegen.hpp"
 #include "VSysInstructions.hpp"
 #include <random>
-#include<ieee754.h>
+
+#include "ieee754.h"
+
 #include "CppUTest/TestHarness.h"
 
 namespace
