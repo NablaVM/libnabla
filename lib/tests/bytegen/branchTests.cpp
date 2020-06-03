@@ -1,5 +1,6 @@
 #include <iostream>
 #include "bytegen.hpp"
+#include "endian.hpp"
 #include "VSysInstructions.hpp"
 #include <random>
 #include "CppUTest/TestHarness.h"
@@ -19,7 +20,7 @@ namespace
         std::random_device rd;
         std::mt19937 gen(rd());
         std::uniform_int_distribution<> dis(0x00, 0xFFFFFF);
-        return dis(gen);
+        return ENDIAN::conditional_to_le_32( dis(gen) );
     }
 
     // Just in case the register addresses need to change, we don't want to have to change

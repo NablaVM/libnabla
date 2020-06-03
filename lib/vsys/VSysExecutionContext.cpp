@@ -5,7 +5,15 @@
 #include <iostream>
 
 #include "util.hpp"
+#include "endian.hpp"
 
+#if BYTE_ORDER == BIG_ENDIAN
+    #warning "VSysExecutionContext: BIG_ENDIAN Systems have not been fully tested"
+#endif 
+
+#if BYTE_ORDER == PDP_ENDIAN
+    #warning "VSysExecutionContext: PDP_ENDIAN Systems have not been fully tested"
+#endif
 
 namespace NABLA
 {
@@ -97,7 +105,7 @@ namespace VSYS
             uint64_t ins = this->contextFunctions[this->currentInstructionBlock].instructions->at(poi);
             
             // The full first byte of the instruction
-            uint8_t operation =  util_extract_byte(ins, 7);
+            uint8_t operation =  UTIL::extract_byte(ins, 7);
 
             // The 'opcode' of the instruction (first 6 bits)
             uint8_t op = (operation & 0xFC);
@@ -123,7 +131,7 @@ namespace VSYS
                 }
                 case INS_LSH :
                 {
-                    uint8_t dest =  util_extract_byte(ins, 6);
+                    uint8_t dest =  UTIL::extract_byte(ins, 6);
                     get_arith_lhs_rhs(id, ins, &lhs, &rhs);
                     this->registers[dest] = (lhs << rhs);
 
@@ -135,7 +143,7 @@ namespace VSYS
 
                 case INS_RSH :
                 {
-                    uint8_t dest =  util_extract_byte(ins, 6);
+                    uint8_t dest =  UTIL::extract_byte(ins, 6);
                     get_arith_lhs_rhs(id, ins, &lhs, &rhs);
                     this->registers[dest] = (lhs >> rhs);
 
@@ -147,7 +155,7 @@ namespace VSYS
 
                 case INS_AND :
                 {
-                    uint8_t dest =  util_extract_byte(ins, 6);
+                    uint8_t dest =  UTIL::extract_byte(ins, 6);
                     get_arith_lhs_rhs(id, ins, &lhs, &rhs);
                     this->registers[dest] = (lhs & rhs);
 
@@ -159,7 +167,7 @@ namespace VSYS
 
                 case INS_OR  :
                 {
-                    uint8_t dest =  util_extract_byte(ins, 6);
+                    uint8_t dest =  UTIL::extract_byte(ins, 6);
                     get_arith_lhs_rhs(id, ins, &lhs, &rhs);
                     this->registers[dest] = (lhs | rhs);
 
@@ -171,7 +179,7 @@ namespace VSYS
 
                 case INS_XOR :
                 {
-                    uint8_t dest =  util_extract_byte(ins, 6);
+                    uint8_t dest =  UTIL::extract_byte(ins, 6);
                     get_arith_lhs_rhs(id, ins, &lhs, &rhs);
                     this->registers[dest] = (lhs ^ rhs);
 
@@ -183,7 +191,7 @@ namespace VSYS
 
                 case INS_NOT :
                 {
-                    uint8_t dest =  util_extract_byte(ins, 6);
+                    uint8_t dest =  UTIL::extract_byte(ins, 6);
                     get_arith_lhs_rhs(id, ins, &lhs, &rhs);
                     this->registers[dest] = (~lhs);
 
@@ -195,7 +203,7 @@ namespace VSYS
 
                 case INS_ADD  :
                 {
-                    uint8_t dest =  util_extract_byte(ins, 6);
+                    uint8_t dest =  UTIL::extract_byte(ins, 6);
                     assert(dest < 16);
                     get_arith_lhs_rhs(id, ins, &lhs, &rhs);
                     this->registers[dest] = lhs+rhs;
@@ -207,7 +215,7 @@ namespace VSYS
                 }          
                 case INS_SUB  :
                 {
-                    uint8_t dest =  util_extract_byte(ins, 6);
+                    uint8_t dest =  UTIL::extract_byte(ins, 6);
                     assert(dest < 16);
                     get_arith_lhs_rhs(id, ins, &lhs, &rhs);
                     this->registers[dest] = lhs-rhs;
@@ -219,7 +227,7 @@ namespace VSYS
                 }          
                 case INS_MUL  :
                 {
-                    uint8_t dest =  util_extract_byte(ins, 6);
+                    uint8_t dest =  UTIL::extract_byte(ins, 6);
                     assert(dest < 16);
                     get_arith_lhs_rhs(id, ins, &lhs, &rhs);
                     this->registers[dest] = lhs*rhs;
@@ -231,7 +239,7 @@ namespace VSYS
                 }          
                 case INS_DIV  :
                 {
-                    uint8_t dest =  util_extract_byte(ins, 6);
+                    uint8_t dest =  UTIL::extract_byte(ins, 6);
                     assert(dest < 16);
                     get_arith_lhs_rhs(id, ins, &lhs, &rhs);
 
@@ -245,67 +253,67 @@ namespace VSYS
                 }          
                 case INS_ADDD :
                 {
-                    uint8_t dest =  util_extract_byte(ins, 6);
+                    uint8_t dest =  UTIL::extract_byte(ins, 6);
                     assert(dest < 16);
 
                     get_arith_lhs_rhs(0, ins, &lhs, &rhs);
                 
-                    this->registers[dest] = util_convert_double_to_uint64( util_convert_uint64_to_double(lhs) + util_convert_uint64_to_double(rhs));
+                    this->registers[dest] = UTIL::convert_double_to_uint64( UTIL::convert_uint64_to_double(lhs) + UTIL::convert_uint64_to_double(rhs));
 
 #ifdef NABLA_VIRTUAL_MACHINE_DEBUG_OUTPUT
-                    std::cout << "INS_ADDD : Result : " << util_convert_uint64_to_double(lhs) + util_convert_uint64_to_double(rhs) << " | Dest : " << (int)dest << std::endl;
+                    std::cout << "INS_ADDD : Result : " << UTIL::convert_uint64_to_double(lhs) + UTIL::convert_uint64_to_double(rhs) << " | Dest : " << (int)dest << std::endl;
 #endif
                     break;
                 }          
                 case INS_SUBD :
                 {
-                    uint8_t dest =  util_extract_byte(ins, 6);
+                    uint8_t dest =  UTIL::extract_byte(ins, 6);
                     assert(dest < 16);
 
                     get_arith_lhs_rhs(0, ins, &lhs, &rhs);
                 
-                    this->registers[dest] = util_convert_double_to_uint64( util_convert_uint64_to_double(lhs) - util_convert_uint64_to_double(rhs));
+                    this->registers[dest] = UTIL::convert_double_to_uint64( UTIL::convert_uint64_to_double(lhs) - UTIL::convert_uint64_to_double(rhs));
 
 #ifdef NABLA_VIRTUAL_MACHINE_DEBUG_OUTPUT
-                    std::cout << "INS_SUBD : Result : " << util_convert_uint64_to_double(lhs) - util_convert_uint64_to_double(rhs) << " | Dest : " << (int)dest << std::endl;
+                    std::cout << "INS_SUBD : Result : " << UTIL::convert_uint64_to_double(lhs) - UTIL::convert_uint64_to_double(rhs) << " | Dest : " << (int)dest << std::endl;
 #endif
                     break;
                 }          
                 case INS_MULD :
                 {
-                    uint8_t dest =  util_extract_byte(ins, 6);
+                    uint8_t dest =  UTIL::extract_byte(ins, 6);
                     assert(dest < 16);
 
                     get_arith_lhs_rhs(0, ins, &lhs, &rhs);
                 
-                    this->registers[dest] = util_convert_double_to_uint64( util_convert_uint64_to_double(lhs) * util_convert_uint64_to_double(rhs));
+                    this->registers[dest] = UTIL::convert_double_to_uint64( UTIL::convert_uint64_to_double(lhs) * UTIL::convert_uint64_to_double(rhs));
 
 #ifdef NABLA_VIRTUAL_MACHINE_DEBUG_OUTPUT
-                    std::cout << "INS_MULD : Result : " << util_convert_uint64_to_double(lhs) * util_convert_uint64_to_double(rhs) << " | Dest : " << (int)dest << std::endl;
+                    std::cout << "INS_MULD : Result : " << UTIL::convert_uint64_to_double(lhs) * UTIL::convert_uint64_to_double(rhs) << " | Dest : " << (int)dest << std::endl;
 #endif
                     break;
                 }          
                 case INS_DIVD :
                 {
-                    uint8_t dest =  util_extract_byte(ins, 6);
+                    uint8_t dest =  UTIL::extract_byte(ins, 6);
                     assert(dest < 16);
 
                     get_arith_lhs_rhs(0, ins, &lhs, &rhs);
                 
-                    this->registers[dest] = util_convert_double_to_uint64( util_convert_uint64_to_double(lhs) / util_convert_uint64_to_double(rhs));
+                    this->registers[dest] = UTIL::convert_double_to_uint64( UTIL::convert_uint64_to_double(lhs) / UTIL::convert_uint64_to_double(rhs));
 
 #ifdef NABLA_VIRTUAL_MACHINE_DEBUG_OUTPUT
-                    std::cout << "INS_DIVD : Result : " << util_convert_uint64_to_double(lhs) / util_convert_uint64_to_double(rhs) << " | Dest : " << (int)dest << std::endl;
+                    std::cout << "INS_DIVD : Result : " << UTIL::convert_uint64_to_double(lhs) / UTIL::convert_uint64_to_double(rhs) << " | Dest : " << (int)dest << std::endl;
 #endif
                     break;
                 }          
                 case INS_BGT  :
                 {
-                    lhs = this->registers[util_extract_byte(ins, 6)];
-                    rhs = this->registers[util_extract_byte(ins, 5)];
+                    lhs = this->registers[UTIL::extract_byte(ins, 6)];
+                    rhs = this->registers[UTIL::extract_byte(ins, 5)];
 
-                    uint64_t branchAddr = (uint64_t)util_extract_two_bytes(ins, 4) << 16 | 
-                                          (uint64_t)util_extract_two_bytes(ins, 2);
+                    uint64_t branchAddr = (uint64_t)UTIL::extract_two_bytes(ins, 4) << 16 | 
+                                          (uint64_t)UTIL::extract_two_bytes(ins, 2);
                     
 #ifdef NABLA_VIRTUAL_MACHINE_DEBUG_OUTPUT
                     std::cout << "BGT : " << (lhs > rhs) << std::endl;
@@ -317,11 +325,11 @@ namespace VSYS
                 }          
                 case INS_BGTE :
                 {
-                    lhs = this->registers[util_extract_byte(ins, 6)];
-                    rhs = this->registers[util_extract_byte(ins, 5)];
+                    lhs = this->registers[UTIL::extract_byte(ins, 6)];
+                    rhs = this->registers[UTIL::extract_byte(ins, 5)];
 
-                    uint64_t branchAddr = (uint64_t)util_extract_two_bytes(ins, 4) << 16 | 
-                                          (uint64_t)util_extract_two_bytes(ins, 2);
+                    uint64_t branchAddr = (uint64_t)UTIL::extract_two_bytes(ins, 4) << 16 | 
+                                          (uint64_t)UTIL::extract_two_bytes(ins, 2);
                     
 #ifdef NABLA_VIRTUAL_MACHINE_DEBUG_OUTPUT
                     std::cout << "BGTE : " << (lhs >= rhs) << std::endl;
@@ -333,11 +341,11 @@ namespace VSYS
                 }          
                 case INS_BLT  :
                 {
-                    lhs = this->registers[util_extract_byte(ins, 6)];
-                    rhs = this->registers[util_extract_byte(ins, 5)];
+                    lhs = this->registers[UTIL::extract_byte(ins, 6)];
+                    rhs = this->registers[UTIL::extract_byte(ins, 5)];
 
-                    uint64_t branchAddr = (uint64_t)util_extract_two_bytes(ins, 4) << 16 | 
-                                          (uint64_t)util_extract_two_bytes(ins, 2);
+                    uint64_t branchAddr = (uint64_t)UTIL::extract_two_bytes(ins, 4) << 16 | 
+                                          (uint64_t)UTIL::extract_two_bytes(ins, 2);
                     
 #ifdef NABLA_VIRTUAL_MACHINE_DEBUG_OUTPUT
                     std::cout << "BLT : " << (lhs < rhs) << std::endl;
@@ -349,11 +357,11 @@ namespace VSYS
                 }          
                 case INS_BLTE :
                 {
-                    lhs = this->registers[util_extract_byte(ins, 6)];
-                    rhs = this->registers[util_extract_byte(ins, 5)];
+                    lhs = this->registers[UTIL::extract_byte(ins, 6)];
+                    rhs = this->registers[UTIL::extract_byte(ins, 5)];
 
-                    uint64_t branchAddr = (uint64_t)util_extract_two_bytes(ins, 4) << 16 | 
-                                          (uint64_t)util_extract_two_bytes(ins, 2);
+                    uint64_t branchAddr = (uint64_t)UTIL::extract_two_bytes(ins, 4) << 16 | 
+                                          (uint64_t)UTIL::extract_two_bytes(ins, 2);
                     
 #ifdef NABLA_VIRTUAL_MACHINE_DEBUG_OUTPUT
                     std::cout << "BLTE : " << (lhs <= rhs) << std::endl;
@@ -365,11 +373,11 @@ namespace VSYS
                 }          
                 case INS_BEQ  :
                 {
-                    lhs = this->registers[util_extract_byte(ins, 6)];
-                    rhs = this->registers[util_extract_byte(ins, 5)];
+                    lhs = this->registers[UTIL::extract_byte(ins, 6)];
+                    rhs = this->registers[UTIL::extract_byte(ins, 5)];
 
-                    uint64_t branchAddr = (uint64_t)util_extract_two_bytes(ins, 4) << 16 | 
-                                          (uint64_t)util_extract_two_bytes(ins, 2);
+                    uint64_t branchAddr = (uint64_t)UTIL::extract_two_bytes(ins, 4) << 16 | 
+                                          (uint64_t)UTIL::extract_two_bytes(ins, 2);
 
 #ifdef NABLA_VIRTUAL_MACHINE_DEBUG_OUTPUT
                     std::cout << "BEQ : " << (lhs == rhs) << std::endl;
@@ -381,11 +389,11 @@ namespace VSYS
                 }          
                 case INS_BNE  :
                 {
-                    lhs = this->registers[util_extract_byte(ins, 6)];
-                    rhs = this->registers[util_extract_byte(ins, 5)];
+                    lhs = this->registers[UTIL::extract_byte(ins, 6)];
+                    rhs = this->registers[UTIL::extract_byte(ins, 5)];
 
-                    uint64_t branchAddr = (uint64_t)util_extract_two_bytes(ins, 4) << 16 | 
-                                          (uint64_t)util_extract_two_bytes(ins, 2);
+                    uint64_t branchAddr = (uint64_t)UTIL::extract_two_bytes(ins, 4) << 16 | 
+                                          (uint64_t)UTIL::extract_two_bytes(ins, 2);
                 
 #ifdef NABLA_VIRTUAL_MACHINE_DEBUG_OUTPUT
                     std::cout << "BNE : " << (lhs != rhs) << std::endl;
@@ -397,14 +405,14 @@ namespace VSYS
                 }          
                 case INS_BGTD :
                 {
-                    lhs = this->registers[util_extract_byte(ins, 6)];
-                    rhs = this->registers[util_extract_byte(ins, 5)];
+                    lhs = this->registers[UTIL::extract_byte(ins, 6)];
+                    rhs = this->registers[UTIL::extract_byte(ins, 5)];
 
-                    double lhs_d = util_convert_uint64_to_double(lhs);
-                    double rhs_d = util_convert_uint64_to_double(rhs);
+                    double lhs_d = UTIL::convert_uint64_to_double(lhs);
+                    double rhs_d = UTIL::convert_uint64_to_double(rhs);
 
-                    uint64_t branchAddr = (uint64_t)util_extract_two_bytes(ins, 4) << 16 | 
-                                          (uint64_t)util_extract_two_bytes(ins, 2);
+                    uint64_t branchAddr = (uint64_t)UTIL::extract_two_bytes(ins, 4) << 16 | 
+                                          (uint64_t)UTIL::extract_two_bytes(ins, 2);
 
 #ifdef NABLA_VIRTUAL_MACHINE_DEBUG_OUTPUT
                     std::cout << "BGTD : " << (lhs_d > rhs_d) << std::endl;
@@ -416,14 +424,14 @@ namespace VSYS
                 }          
                 case INS_BGTED:
                 {
-                    lhs = this->registers[util_extract_byte(ins, 6)];
-                    rhs = this->registers[util_extract_byte(ins, 5)];
+                    lhs = this->registers[UTIL::extract_byte(ins, 6)];
+                    rhs = this->registers[UTIL::extract_byte(ins, 5)];
 
-                    double lhs_d = util_convert_uint64_to_double(lhs);
-                    double rhs_d = util_convert_uint64_to_double(rhs);
+                    double lhs_d = UTIL::convert_uint64_to_double(lhs);
+                    double rhs_d = UTIL::convert_uint64_to_double(rhs);
 
-                    uint64_t branchAddr = (uint64_t)util_extract_two_bytes(ins, 4) << 16 | 
-                                          (uint64_t)util_extract_two_bytes(ins, 2);
+                    uint64_t branchAddr = (uint64_t)UTIL::extract_two_bytes(ins, 4) << 16 | 
+                                          (uint64_t)UTIL::extract_two_bytes(ins, 2);
 
 #ifdef NABLA_VIRTUAL_MACHINE_DEBUG_OUTPUT
                     std::cout << "BGTED : " << (lhs_d >= rhs_d) << std::endl;
@@ -435,14 +443,14 @@ namespace VSYS
                 }          
                 case INS_BLTD :
                 {
-                    lhs = this->registers[util_extract_byte(ins, 6)];
-                    rhs = this->registers[util_extract_byte(ins, 5)];
+                    lhs = this->registers[UTIL::extract_byte(ins, 6)];
+                    rhs = this->registers[UTIL::extract_byte(ins, 5)];
 
-                    double lhs_d = util_convert_uint64_to_double(lhs);
-                    double rhs_d = util_convert_uint64_to_double(rhs);
+                    double lhs_d = UTIL::convert_uint64_to_double(lhs);
+                    double rhs_d = UTIL::convert_uint64_to_double(rhs);
 
-                    uint64_t branchAddr = (uint64_t)util_extract_two_bytes(ins, 4) << 16 | 
-                                          (uint64_t)util_extract_two_bytes(ins, 2);
+                    uint64_t branchAddr = (uint64_t)UTIL::extract_two_bytes(ins, 4) << 16 | 
+                                          (uint64_t)UTIL::extract_two_bytes(ins, 2);
 
 #ifdef NABLA_VIRTUAL_MACHINE_DEBUG_OUTPUT
                     std::cout << "BLTD : " << (lhs_d < rhs_d) << std::endl;
@@ -454,14 +462,14 @@ namespace VSYS
                 }          
                 case INS_BLTED:
                 {
-                    lhs = this->registers[util_extract_byte(ins, 6)];
-                    rhs = this->registers[util_extract_byte(ins, 5)];
+                    lhs = this->registers[UTIL::extract_byte(ins, 6)];
+                    rhs = this->registers[UTIL::extract_byte(ins, 5)];
 
-                    double lhs_d = util_convert_uint64_to_double(lhs);
-                    double rhs_d = util_convert_uint64_to_double(rhs);
+                    double lhs_d = UTIL::convert_uint64_to_double(lhs);
+                    double rhs_d = UTIL::convert_uint64_to_double(rhs);
 
-                    uint64_t branchAddr = (uint64_t)util_extract_two_bytes(ins, 4) << 16 | 
-                                          (uint64_t)util_extract_two_bytes(ins, 2);
+                    uint64_t branchAddr = (uint64_t)UTIL::extract_two_bytes(ins, 4) << 16 | 
+                                          (uint64_t)UTIL::extract_two_bytes(ins, 2);
 
 #ifdef NABLA_VIRTUAL_MACHINE_DEBUG_OUTPUT
                     std::cout << "BLTED : " << (lhs_d <= rhs_d) << std::endl;
@@ -473,57 +481,57 @@ namespace VSYS
                 }          
                 case INS_BEQD :
                 {
-                    lhs = this->registers[util_extract_byte(ins, 6)];
-                    rhs = this->registers[util_extract_byte(ins, 5)];
+                    lhs = this->registers[UTIL::extract_byte(ins, 6)];
+                    rhs = this->registers[UTIL::extract_byte(ins, 5)];
 
-                    double lhs_d = util_convert_uint64_to_double(lhs);
-                    double rhs_d = util_convert_uint64_to_double(rhs);
+                    double lhs_d = UTIL::convert_uint64_to_double(lhs);
+                    double rhs_d = UTIL::convert_uint64_to_double(rhs);
 
-                    uint64_t branchAddr = (uint64_t)util_extract_two_bytes(ins, 4) << 16 | 
-                                          (uint64_t)util_extract_two_bytes(ins, 2);
+                    uint64_t branchAddr = (uint64_t)UTIL::extract_two_bytes(ins, 4) << 16 | 
+                                          (uint64_t)UTIL::extract_two_bytes(ins, 2);
 
 #ifdef NABLA_VIRTUAL_MACHINE_DEBUG_OUTPUT
-                    std::cout << "BEQD : " << (util_check_double_equal(lhs_d, rhs_d)) << std::endl;
+                    std::cout << "BEQD : " << (UTIL::check_double_equal(lhs_d, rhs_d)) << std::endl;
 #endif
-                    if(util_check_double_equal(lhs_d, rhs_d)){ this->contextFunctions[
+                    if(UTIL::check_double_equal(lhs_d, rhs_d)){ this->contextFunctions[
                         this->currentInstructionBlock
                         ].instruction_pointer = branchAddr; continue; }
                     break;
                 }          
                 case INS_BNED :
                 {
-                    lhs = this->registers[util_extract_byte(ins, 6)];
-                    rhs = this->registers[util_extract_byte(ins, 5)];
+                    lhs = this->registers[UTIL::extract_byte(ins, 6)];
+                    rhs = this->registers[UTIL::extract_byte(ins, 5)];
 
-                    double lhs_d = util_convert_uint64_to_double(lhs);
-                    double rhs_d = util_convert_uint64_to_double(rhs);
+                    double lhs_d = UTIL::convert_uint64_to_double(lhs);
+                    double rhs_d = UTIL::convert_uint64_to_double(rhs);
 
-                    uint64_t branchAddr = (uint64_t)util_extract_two_bytes(ins, 4) << 16 | 
-                                          (uint64_t)util_extract_two_bytes(ins, 2);
+                    uint64_t branchAddr = (uint64_t)UTIL::extract_two_bytes(ins, 4) << 16 | 
+                                          (uint64_t)UTIL::extract_two_bytes(ins, 2);
 
 #ifdef NABLA_VIRTUAL_MACHINE_DEBUG_OUTPUT
-                    std::cout << "BNED : " << !(util_check_double_equal(lhs_d, rhs_d)) << std::endl;
+                    std::cout << "BNED : " << !(UTIL::check_double_equal(lhs_d, rhs_d)) << std::endl;
 #endif
-                    if(!util_check_double_equal(lhs_d, rhs_d)){ this->contextFunctions[
+                    if(!UTIL::check_double_equal(lhs_d, rhs_d)){ this->contextFunctions[
                         this->currentInstructionBlock
                         ].instruction_pointer = branchAddr; continue; }
                     break;
                 }          
                 case INS_MOV  :
                 {
-                    lhs = util_extract_byte(ins, 6);
+                    lhs = UTIL::extract_byte(ins, 6);
 
                     // Move register value into another register
                     if(id == 0)
                     {
-                        rhs = util_extract_byte(ins, 5);
+                        rhs = UTIL::extract_byte(ins, 5);
                         this->registers[lhs] = this->registers[rhs];
                     }
                     // Move numerival value into a register
                     else if (id == 1)
                     {
-                        int32_t rval = (uint32_t)util_extract_two_bytes(ins, 5) << 16 | 
-                                       (uint32_t)util_extract_two_bytes(ins, 3);
+                        int32_t rval = (uint32_t)UTIL::extract_two_bytes(ins, 5) << 16 | 
+                                       (uint32_t)UTIL::extract_two_bytes(ins, 3);
 
                         this->registers[lhs] =  rval;
                     }
@@ -542,21 +550,21 @@ namespace VSYS
                 }
                 case INS_LDB  :
                 {
-                    uint8_t dest =  util_extract_byte(ins, 6);
-                    uint8_t stackSouce = util_extract_byte(ins, 5);
+                    uint8_t dest =  UTIL::extract_byte(ins, 6);
+                    uint8_t stackSouce = UTIL::extract_byte(ins, 5);
                     uint64_t sourceAddress;
 
                     // Depending on the 'id' of the instruction we need to change where we are getting the value
                     // for the stack offset.
                     if(id == 0)
                     {
-                        sourceAddress = (uint64_t)util_extract_two_bytes(ins, 4) << 16| 
-                                        (uint64_t)util_extract_two_bytes(ins, 2);
+                        sourceAddress = (uint64_t)UTIL::extract_two_bytes(ins, 4) << 16| 
+                                        (uint64_t)UTIL::extract_two_bytes(ins, 2);
 
                     }
                     else if (id == 1)
                     {
-                        uint8_t sourceReg  = util_extract_byte(ins, 4);
+                        uint8_t sourceReg  = UTIL::extract_byte(ins, 4);
                         sourceAddress = this->registers[sourceReg];
                     }
                     else
@@ -588,21 +596,21 @@ namespace VSYS
                 }
                 case INS_LDW  :
                 {
-                    uint8_t dest =  util_extract_byte(ins, 6);
-                    uint8_t stackSouce = util_extract_byte(ins, 5);
+                    uint8_t dest =  UTIL::extract_byte(ins, 6);
+                    uint8_t stackSouce = UTIL::extract_byte(ins, 5);
                     uint64_t sourceAddress;
 
                     // Depending on the 'id' of the instruction we need to change where we are getting the value
                     // for the stack offset.
                     if(id == 0)
                     {
-                        sourceAddress = (uint64_t)util_extract_two_bytes(ins, 4) << 16| 
-                                        (uint64_t)util_extract_two_bytes(ins, 2);
+                        sourceAddress = (uint64_t)UTIL::extract_two_bytes(ins, 4) << 16| 
+                                        (uint64_t)UTIL::extract_two_bytes(ins, 2);
 
                     }
                     else if (id == 1)
                     {
-                        uint8_t sourceReg  = util_extract_byte(ins, 4);
+                        uint8_t sourceReg  = UTIL::extract_byte(ins, 4);
                         sourceAddress = this->registers[sourceReg];
                     }
                     else
@@ -634,7 +642,7 @@ namespace VSYS
                 }         
                 case INS_STB  :
                 {
-                    uint8_t  stackDest = util_extract_byte(ins, 6);
+                    uint8_t  stackDest = UTIL::extract_byte(ins, 6);
                     uint64_t destAddress;
                     uint8_t  sourceReg;
 
@@ -642,14 +650,14 @@ namespace VSYS
                     // for the stack offset.
                     if(id == 0)
                     {
-                        sourceReg =  util_extract_byte(ins, 1);
-                        destAddress = (uint64_t)util_extract_two_bytes(ins, 5) << 16| 
-                                      (uint64_t)util_extract_two_bytes(ins, 3);
+                        sourceReg =  UTIL::extract_byte(ins, 1);
+                        destAddress = (uint64_t)UTIL::extract_two_bytes(ins, 5) << 16| 
+                                      (uint64_t)UTIL::extract_two_bytes(ins, 3);
                     }
                     else if (id == 1)
                     {
-                        sourceReg = util_extract_byte(ins, 4);
-                        uint8_t destReg   = util_extract_byte(ins, 5);
+                        sourceReg = UTIL::extract_byte(ins, 4);
+                        uint8_t destReg   = UTIL::extract_byte(ins, 5);
                         destAddress = this->registers[destReg];
                     }
                     else
@@ -684,7 +692,7 @@ namespace VSYS
                 } 
                 case INS_STW  :
                 {
-                    uint8_t  stackDest = util_extract_byte(ins, 6);
+                    uint8_t  stackDest = UTIL::extract_byte(ins, 6);
                     uint64_t destAddress;
                     uint8_t  sourceReg;
 
@@ -692,14 +700,14 @@ namespace VSYS
                     // for the stack offset.
                     if(id == 0)
                     {
-                        sourceReg =  util_extract_byte(ins, 1);
-                        destAddress = (uint64_t)util_extract_two_bytes(ins, 5) << 16| 
-                                      (uint64_t)util_extract_two_bytes(ins, 3);
+                        sourceReg =  UTIL::extract_byte(ins, 1);
+                        destAddress = (uint64_t)UTIL::extract_two_bytes(ins, 5) << 16| 
+                                      (uint64_t)UTIL::extract_two_bytes(ins, 3);
                     }
                     else if (id == 1)
                     {
-                        sourceReg = util_extract_byte(ins, 4);
-                        uint8_t destReg   = util_extract_byte(ins, 5);
+                        sourceReg = UTIL::extract_byte(ins, 4);
+                        uint8_t destReg   = UTIL::extract_byte(ins, 5);
                         destAddress = this->registers[destReg];
                     }
                     else
@@ -735,8 +743,8 @@ namespace VSYS
                 }        
                 case INS_PUSH  :
                 {
-                    uint8_t destStack = util_extract_byte(ins, 6);
-                    uint8_t sourceReg = util_extract_byte(ins, 5);
+                    uint8_t destStack = UTIL::extract_byte(ins, 6);
+                    uint8_t sourceReg = UTIL::extract_byte(ins, 5);
 
                     bool okay = false;
                     if(destStack == GLOBAL_STACK)
@@ -762,8 +770,8 @@ namespace VSYS
                 }  
                 case INS_PUSHW :
                 {
-                    uint8_t destStack = util_extract_byte(ins, 6);
-                    uint8_t sourceReg = util_extract_byte(ins, 5);
+                    uint8_t destStack = UTIL::extract_byte(ins, 6);
+                    uint8_t sourceReg = UTIL::extract_byte(ins, 5);
 
                     bool okay = false;
                     if(destStack == GLOBAL_STACK)
@@ -789,8 +797,8 @@ namespace VSYS
                 }      
                 case INS_POP  :
                 {
-                    uint8_t destReg     = util_extract_byte(ins, 6);
-                    uint8_t sourceStack = util_extract_byte(ins, 5);
+                    uint8_t destReg     = UTIL::extract_byte(ins, 6);
+                    uint8_t sourceStack = UTIL::extract_byte(ins, 5);
 
                     bool okay = false;
                     uint8_t val;
@@ -819,8 +827,8 @@ namespace VSYS
                 }    
                 case INS_POPW  :
                 {
-                    uint8_t destReg     = util_extract_byte(ins, 6);
-                    uint8_t sourceStack = util_extract_byte(ins, 5);
+                    uint8_t destReg     = UTIL::extract_byte(ins, 6);
+                    uint8_t sourceStack = UTIL::extract_byte(ins, 5);
 
                     bool okay = false;
                     uint64_t val;
@@ -849,8 +857,8 @@ namespace VSYS
                 }          
                 case INS_SIZE :
                 {
-                    uint8_t destReg         = util_extract_byte(ins, 6);
-                    uint8_t stackInQuestion = util_extract_byte(ins, 5);
+                    uint8_t destReg         = UTIL::extract_byte(ins, 6);
+                    uint8_t stackInQuestion = UTIL::extract_byte(ins, 5);
 
                     if(stackInQuestion == GLOBAL_STACK)
                     {
@@ -875,8 +883,8 @@ namespace VSYS
                 }
                 case INS_JUMP :
                 {
-                    uint64_t destAddress = (uint64_t)util_extract_two_bytes(ins, 6) << 16| 
-                                        (uint64_t)util_extract_two_bytes(ins, 4);
+                    uint64_t destAddress = (uint64_t)UTIL::extract_two_bytes(ins, 6) << 16| 
+                                        (uint64_t)UTIL::extract_two_bytes(ins, 4);
 
                     this->contextFunctions[
                         this->currentInstructionBlock
@@ -913,8 +921,8 @@ namespace VSYS
                 case INS_CS_SF :
                 {
                     // Call Stack Store function ( The function to return to when next return hits)
-                    uint64_t func_from =  (uint64_t)util_extract_two_bytes(ins, 6) << 16| 
-                                          (uint64_t)util_extract_two_bytes(ins, 4);
+                    uint64_t func_from =  (uint64_t)UTIL::extract_two_bytes(ins, 6) << 16| 
+                                          (uint64_t)UTIL::extract_two_bytes(ins, 4);
 
                     this->callStack.push(func_from);
 
@@ -926,8 +934,8 @@ namespace VSYS
                 case INS_CS_SR :
                 {
                     // Call Stack Store Region Of Interest ( Instruction Pointer )
-                    uint64_t roi =  (uint64_t)util_extract_two_bytes(ins, 6) << 16| 
-                                    (uint64_t)util_extract_two_bytes(ins, 4);
+                    uint64_t roi =  (uint64_t)UTIL::extract_two_bytes(ins, 6) << 16| 
+                                    (uint64_t)UTIL::extract_two_bytes(ins, 4);
                                         
                     this->callStack.push(roi);
                     
@@ -939,8 +947,8 @@ namespace VSYS
                 case INS_CALL :
                 {
                     // Call
-                    uint64_t destAddress =  (uint64_t)util_extract_two_bytes(ins, 6) << 16| 
-                                            (uint64_t)util_extract_two_bytes(ins, 4);
+                    uint64_t destAddress =  (uint64_t)UTIL::extract_two_bytes(ins, 6) << 16| 
+                                            (uint64_t)UTIL::extract_two_bytes(ins, 4);
 
                     currentInstructionBlock = destAddress;
 
@@ -954,8 +962,8 @@ namespace VSYS
                 case INS_PCALL :
                 {
                     // P Call
-                    uint64_t destAddress =  (uint64_t)util_extract_two_bytes(ins, 6) << 16| 
-                                            (uint64_t)util_extract_two_bytes(ins, 4);
+                    uint64_t destAddress =  (uint64_t)UTIL::extract_two_bytes(ins, 6) << 16| 
+                                            (uint64_t)UTIL::extract_two_bytes(ins, 4);
 
                     owner.queueNewExecutionContext(destAddress);
                     
@@ -1051,7 +1059,7 @@ namespace VSYS
 
         if(this->registers[10] != 0)
         {
-            uint8_t device_id = util_extract_byte(this->registers[10], 7);
+            uint8_t device_id = UTIL::extract_byte(this->registers[10], 7);
             if(owner.externalDeviceMap.find(device_id) == owner.externalDeviceMap.end())
             {
 
@@ -1086,23 +1094,23 @@ namespace VSYS
     {
         if(id == 0)
         {
-            *lhs =   this->registers[util_extract_byte(ins, 5)];
-            *rhs =   this->registers[util_extract_byte(ins, 4)];
+            *lhs =   this->registers[UTIL::extract_byte(ins, 5)];
+            *rhs =   this->registers[UTIL::extract_byte(ins, 4)];
         }
         else if (id == 1)
         {
-            *lhs =  this->registers[util_extract_byte(ins, 5)];
-            *rhs = (int16_t)util_extract_two_bytes(ins, 4);
+            *lhs =  this->registers[UTIL::extract_byte(ins, 5)];
+            *rhs = (int16_t)UTIL::extract_two_bytes(ins, 4);
         }
         else if (id == 2)
         {
-            *lhs =  (int16_t)util_extract_two_bytes(ins, 5);
-            *rhs =  this->registers[util_extract_byte(ins, 3)];
+            *lhs =  (int16_t)UTIL::extract_two_bytes(ins, 5);
+            *rhs =  this->registers[UTIL::extract_byte(ins, 3)];
         }
         else if (id == 3)
         {
-            *lhs =  (int16_t)util_extract_two_bytes(ins, 5);
-            *rhs =  (int16_t)util_extract_two_bytes(ins, 3);
+            *lhs =  (int16_t)UTIL::extract_two_bytes(ins, 5);
+            *rhs =  (int16_t)UTIL::extract_two_bytes(ins, 3);
         }
     }
 

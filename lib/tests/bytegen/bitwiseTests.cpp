@@ -1,5 +1,6 @@
 #include <iostream>
 #include "bytegen.hpp"
+#include "endian.hpp"
 #include "VSysInstructions.hpp"
 #include <random>
 #include "CppUTest/TestHarness.h"
@@ -97,12 +98,12 @@ TEST(BitwiseTests, AllBitwiseTests)
             arg2 = getRandom16(0, 60000);   // NUM
 
             expectedIns.bytes[1] = integerToRegister(destReg);
-            uint16_t num = static_cast<uint16_t>(arg1);
+            uint16_t num = ENDIAN::conditional_to_le_16( static_cast<uint16_t>(arg1) );
 
             expectedIns.bytes[2] = ( (num & 0xFF00) >> 8 ) ;
             expectedIns.bytes[3] = ( (num & 0x00FF) >> 0 ) ;
 
-            uint16_t num1 = static_cast<uint16_t>(arg2);
+            uint16_t num1 = ENDIAN::conditional_to_le_16( static_cast<uint16_t>(arg2) );
 
             expectedIns.bytes[4] = ( (num1 & 0xFF00) >> 8 ) ;
             expectedIns.bytes[5] = ( (num1 & 0x00FF) >> 0 ) ;
@@ -119,7 +120,7 @@ TEST(BitwiseTests, AllBitwiseTests)
 
             expectedIns.bytes[1] = integerToRegister(destReg);
 
-            uint16_t num = static_cast<uint16_t>(arg1);
+            uint16_t num = ENDIAN::conditional_to_le_16( static_cast<uint16_t>(arg1) );
             expectedIns.bytes[2] = ( (num & 0xFF00) >> 8 ) ;
             expectedIns.bytes[3] = ( (num & 0x00FF) >> 0 ) ;
             expectedIns.bytes[4] = integerToRegister(arg2);
@@ -141,7 +142,7 @@ TEST(BitwiseTests, AllBitwiseTests)
 
             expectedIns.bytes[1] = integerToRegister(destReg);
             expectedIns.bytes[2] = integerToRegister(arg1);
-            uint16_t num = static_cast<uint16_t>(arg2);
+            uint16_t num = ENDIAN::conditional_to_le_16( static_cast<uint16_t>(arg2) );
             expectedIns.bytes[3] = ( (num & 0xFF00) >> 8 ) ;
             expectedIns.bytes[4] = ( (num & 0x00FF) >> 0 ) ;
             expectedIns.bytes[5] = 0xFF;

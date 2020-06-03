@@ -44,7 +44,7 @@ namespace EXTERNAL
     
     void Host::execute(int64_t (&registers)[16], Memory<NABLA_VSYS_SETTINGS_GLOBAL_MEMORY_BYTES> &global_memory)
     {
-        uint8_t subid = util_extract_byte(registers[10], 6);
+        uint8_t subid = UTIL::extract_byte(registers[10], 6);
 
         switch(subid)
         {

@@ -14,6 +14,8 @@
 #ifndef PORTABLE_ENDIAN_H__
 #define PORTABLE_ENDIAN_H__
 
+#include <stdint.h>
+
 #if (defined(_WIN16) || defined(_WIN32) || defined(_WIN64)) && !defined(__WINDOWS__)
 
 #	define __WINDOWS__
@@ -122,4 +124,87 @@
 
 #endif
 
+// Added by Josh Bosley - 3/ June/ 2020
+
+namespace ENDIAN
+{
+	// -------------------------------------------------------------
+	//
+	// -------------------------------------------------------------
+
+	static inline uint16_t conditional_to_le_16(uint16_t val)
+	{
+#if BYTE_ORDER == LITTLE_ENDIAN
+		return val;
+#else
+		return htole16(val);
 #endif
+	}
+
+	// -------------------------------------------------------------
+	//
+	// -------------------------------------------------------------
+
+	static inline uint32_t conditional_to_le_32(uint32_t val)
+	{
+#if BYTE_ORDER == LITTLE_ENDIAN
+		return val;
+#else
+		return htole32(val);
+#endif
+	}
+
+	// -------------------------------------------------------------
+	//
+	// -------------------------------------------------------------
+
+	static inline uint64_t conditional_to_le_64(uint64_t val)
+	{
+#if BYTE_ORDER == LITTLE_ENDIAN
+		return val;
+#else
+		return htole64(val);
+#endif
+	}
+
+	// -------------------------------------------------------------
+	//
+	// -------------------------------------------------------------
+
+	static inline uint16_t conditional_from_le_16(uint16_t val)
+	{
+#if BYTE_ORDER == LITTLE_ENDIAN
+		return val;
+#else
+		return le16toh(val);
+#endif
+	}
+
+	// -------------------------------------------------------------
+	//
+	// -------------------------------------------------------------
+
+	static inline uint32_t conditional_from_le_32(uint32_t val)
+	{
+#if BYTE_ORDER == LITTLE_ENDIAN
+		return val;
+#else
+		return le32toh(val);
+#endif
+	}
+
+	// -------------------------------------------------------------
+	//
+	// -------------------------------------------------------------
+
+	static inline uint64_t conditional_from_le_64(uint64_t val)
+	{
+#if BYTE_ORDER == LITTLE_ENDIAN
+		return val;
+#else 
+		return le64toh(val);
+#endif
+	}
+	#endif
+
+}
