@@ -39,7 +39,6 @@ include_directories(${CMAKE_SOURCE_DIR}/sockets)
 include_directories(${CMAKE_SOURCE_DIR}/util)
 include_directories(${CMAKE_SOURCE_DIR}/json)
 include_directories(${CMAKE_SOURCE_DIR}/projectfs)
-include_directories(${CMAKE_SOURCE_DIR}/scopetree)
 include_directories(${CMAKE_SOURCE_DIR}/vsys)
 include_directories(${CMAKE_SOURCE_DIR}/vsys/hardware)
 
@@ -55,7 +54,6 @@ set(HEADERS
     ${CMAKE_SOURCE_DIR}/sockets/sockets.h
     ${CMAKE_SOURCE_DIR}/sockets/sockpool.h
     ${CMAKE_SOURCE_DIR}/json/json.hpp
-    ${CMAKE_SOURCE_DIR}/scopetree/scopetree.hpp
     ${CMAKE_SOURCE_DIR}/projectfs/projectfs.hpp
     ${CMAKE_SOURCE_DIR}/projectfs/projecttype.hpp
     ${CMAKE_SOURCE_DIR}/projectfs/projectstructure.hpp
@@ -78,7 +76,6 @@ set(SOURCES
     ${CMAKE_SOURCE_DIR}/util/util.cpp
     ${CMAKE_SOURCE_DIR}/sockets/sockets.c
     ${CMAKE_SOURCE_DIR}/sockets/sockpool.c
-    ${CMAKE_SOURCE_DIR}/scopetree/scopetree.cpp
     ${CMAKE_SOURCE_DIR}/projectfs/projectfs.cpp
     ${CMAKE_SOURCE_DIR}/projectfs/projectstructure.cpp
     ${CMAKE_SOURCE_DIR}/vsys/VSysExecutionContext.cpp
