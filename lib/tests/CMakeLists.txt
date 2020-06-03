@@ -1,4 +1,8 @@
 
+#   Endian tests
+#
+add_subdirectory(endian)
+
 #   Util tests
 #
 add_subdirectory(util)

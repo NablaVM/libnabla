@@ -122,4 +122,77 @@
 
 #endif
 
+// Added by Josh Bosley - 3/ June/ 2020
+
+// -------------------------------------------------------------
+//
+// -------------------------------------------------------------
+
+static inline uint16_t endian_conditional_to_be_16(uint16_t val)
+{
+#if ((BYTE_ORDER == LITTLE_ENDIAN) || (BYTE_ORDER == PDP_ENDIAN))
+	val = htobe16(val);
+#endif
+	return val;
+}
+
+// -------------------------------------------------------------
+//
+// -------------------------------------------------------------
+
+static inline uint32_t endian_conditional_to_be_32(uint32_t val)
+{
+#if ((BYTE_ORDER == LITTLE_ENDIAN) || (BYTE_ORDER == PDP_ENDIAN))
+	val = htobe32(val);
+#endif
+	return val;
+}
+
+// -------------------------------------------------------------
+//
+// -------------------------------------------------------------
+
+static inline uint64_t endian_conditional_to_be_64(uint64_t val)
+{
+#if ((BYTE_ORDER == LITTLE_ENDIAN) || (BYTE_ORDER == PDP_ENDIAN))
+	val = htobe64(val);
+#endif
+	return val;
+}
+
+// -------------------------------------------------------------
+//
+// -------------------------------------------------------------
+
+static inline uint16_t endian_conditional_from_be_16(uint16_t val)
+{
+#if ((BYTE_ORDER == LITTLE_ENDIAN) || (BYTE_ORDER == PDP_ENDIAN))
+	val = be16toh(val);
+#endif
+	return val;
+}
+
+// -------------------------------------------------------------
+//
+// -------------------------------------------------------------
+
+static inline uint32_t endian_conditional_from_be_32(uint32_t val)
+{
+#if ((BYTE_ORDER == LITTLE_ENDIAN) || (BYTE_ORDER == PDP_ENDIAN))
+	val = be32toh(val);
+#endif
+	return val;
+}
+
+// -------------------------------------------------------------
+//
+// -------------------------------------------------------------
+
+static inline uint64_t endian_conditional_from_be_64(uint64_t val)
+{
+#if ((BYTE_ORDER == LITTLE_ENDIAN) || (BYTE_ORDER == PDP_ENDIAN))
+	val = be64toh(val);
+#endif
+	return val;
+}
 #endif
