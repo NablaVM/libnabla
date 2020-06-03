@@ -43,19 +43,19 @@ namespace
         double d;
     };
 
-    double test_util_convert_uint64_to_double(uint64_t val)
+    double test_convert_uint64_to_double(uint64_t val)
     {
         union doubleEval d; d.val = val;
         return d.d;
     }
 
-    uint64_t test_util_convert_double_to_uint64(double val)
+    uint64_t test_convert_double_to_uint64(double val)
     {
         union doubleEval d; d.d = val;
         return d.val;
     }
 
-    bool test_util_check_double_equal(double lhs, double rhs)
+    bool test_check_double_equal(double lhs, double rhs)
     {
         double precision = 0.00001;
         if (((lhs - precision) < rhs) && 
@@ -88,12 +88,12 @@ TEST(UtilityTests, extraction)
 {
     for(auto &tc : extractionCases8)
     {
-        CHECK_EQUAL_TEXT(tc.expected, util_extract_byte(tc.data, tc.idx), "Utility failed to extract 1 byte");
+        CHECK_EQUAL_TEXT(tc.expected, UTIL::extract_byte(tc.data, tc.idx), "Utility failed to extract 1 byte");
     }
 
     for(auto &tc : extractionCases16)
     {
-        CHECK_EQUAL_TEXT(tc.expected, util_extract_two_bytes(tc.data, tc.idx), "Utility failed to extract 2 bytes");
+        CHECK_EQUAL_TEXT(tc.expected, UTIL::extract_two_bytes(tc.data, tc.idx), "Utility failed to extract 2 bytes");
     }
 }
 
@@ -107,13 +107,13 @@ TEST(UtilityTests, conversion)
     {
         double val = getRandomDouble(-10000.0, 10000.0);
 
-        uint64_t t64 = test_util_convert_double_to_uint64(val);
-        uint64_t u64 = util_convert_double_to_uint64(val);
+        uint64_t t64 = UTIL::convert_double_to_uint64(val);
+        uint64_t u64 = UTIL::convert_double_to_uint64(val);
 
         CHECK_EQUAL_TEXT(t64, u64, "Converted doubles don't match");
 
-        double tdouble = test_util_convert_uint64_to_double(t64);
-        double udouble = util_convert_uint64_to_double(u64);
+        double tdouble = UTIL::convert_uint64_to_double(t64);
+        double udouble = UTIL::convert_uint64_to_double(u64);
 
         CHECK_EQUAL_TEXT(val, tdouble, "The test conversion of double -> int -> double failed. Don't trust anyone. Call the cops.");
 
@@ -132,7 +132,7 @@ TEST(UtilityTests, equality)
     {
         double d = getRandomDouble(i, i + 1.0);
 
-        CHECK_EQUAL_TEXT( test_util_check_double_equal(i, d), util_check_double_equal(i, d), "Result of util double equality check didn't meet expectation");
+        CHECK_EQUAL_TEXT( UTIL::check_double_equal(i, d), UTIL::check_double_equal(i, d), "Result of util double equality check didn't meet expectation");
     }
 }
 

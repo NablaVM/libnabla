@@ -159,7 +159,7 @@ TEST(ConstantTests, doublePrecisionFp)
 
         std::vector<uint8_t> expected;
 
-        uint64_t packed = ENDIAN::conditional_to_le_64( util_convert_double_to_uint64(dval) );
+        uint64_t packed = ENDIAN::conditional_to_le_64( UTIL::convert_double_to_uint64(dval) );
 
         expected.push_back( NABLA::VSYS::CONST_DBL      );
         expected.push_back( (packed & 0xFF00000000000000) >> 56 );

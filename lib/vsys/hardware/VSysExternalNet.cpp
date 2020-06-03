@@ -89,15 +89,15 @@ namespace EXTERNAL
     {
         struct CommandCreate cc;
 
-        cc.domain   = util_extract_byte(vm->registers[10], 4);
-        cc.type     = util_extract_byte(vm->registers[10], 3);
-        cc.protocol = util_extract_byte(vm->registers[10], 2);
-        cc.port     = util_extract_two_bytes(vm->registers[10], 1);
+        cc.domain   = UTIL::extract_byte(vm->registers[10], 4);
+        cc.type     = UTIL::extract_byte(vm->registers[10], 3);
+        cc.protocol = UTIL::extract_byte(vm->registers[10], 2);
+        cc.port     = UTIL::extract_two_bytes(vm->registers[10], 1);
 
-        cc.ipAddress = (uint32_t)util_extract_two_bytes(vm->registers[11], 7) << 16 | 
-                       (uint32_t)util_extract_two_bytes(vm->registers[11], 5);
+        cc.ipAddress = (uint32_t)UTIL::extract_two_bytes(vm->registers[11], 7) << 16 | 
+                       (uint32_t)UTIL::extract_two_bytes(vm->registers[11], 5);
 
-        cc.blocking = util_extract_byte(vm->registers[11], 3);
+        cc.blocking = UTIL::extract_byte(vm->registers[11], 3);
 
 #ifdef NABLA_VIRTUAL_MACHINE_DEBUG_OUTPUT
         std::cout << "New command create: domain: " << (int)cc.domain << " type: " << (int)cc.type <<
@@ -163,7 +163,7 @@ namespace EXTERNAL
 
     uint8_t process_check_for_common_command(struct NETDevice * nd, struct VM * vm, uint8_t caller)
     {
-        uint8_t command = util_extract_byte(vm->registers[10], 5);
+        uint8_t command = UTIL::extract_byte(vm->registers[10], 5);
 
         switch(command)
         {
@@ -213,14 +213,14 @@ namespace EXTERNAL
             }
             case NABLA_NET_DEVICE_COMMAND_DELETE:
             {
-                uint16_t id = util_extract_two_bytes(vm->registers[10], 4);
+                uint16_t id = UTIL::extract_two_bytes(vm->registers[10], 4);
 
                 sockpool_delete_socket(nd->socket_pool, id);
                 return 1;
             }
             case NABLA_NET_DEVICE_COMMAND_CLOSE :
             {
-                uint16_t id = util_extract_two_bytes(vm->registers[10], 4);
+                uint16_t id = UTIL::extract_two_bytes(vm->registers[10], 4);
 
                 sockpool_close_socket(nd->socket_pool, id);
                 return 1;
@@ -251,8 +251,8 @@ namespace EXTERNAL
             return;
         }
 
-        uint8_t command = util_extract_byte(vm->registers[10], 5);
-        uint16_t object_id = util_extract_two_bytes(vm->registers[10], 4);
+        uint8_t command = UTIL::extract_byte(vm->registers[10], 5);
+        uint16_t object_id = UTIL::extract_two_bytes(vm->registers[10], 4);
 
         //  --------------------- Check 'specific' commands second ---------------------------
         //
@@ -294,12 +294,12 @@ namespace EXTERNAL
                 }
                 
                 // Extract information for send
-                uint16_t num_bytes = util_extract_two_bytes(vm->registers[10], 2);
+                uint16_t num_bytes = UTIL::extract_two_bytes(vm->registers[10], 2);
 
-                uint32_t gs_start_addr = (uint32_t)util_extract_two_bytes(vm->registers[11], 7) << 16 |
-                                         (uint32_t)util_extract_two_bytes(vm->registers[11], 5);
-                uint32_t gs_end_addr   = (uint32_t)util_extract_two_bytes(vm->registers[11], 3) << 16 |
-                                         (uint32_t)util_extract_two_bytes(vm->registers[11], 1);
+                uint32_t gs_start_addr = (uint32_t)UTIL::extract_two_bytes(vm->registers[11], 7) << 16 |
+                                         (uint32_t)UTIL::extract_two_bytes(vm->registers[11], 5);
+                uint32_t gs_end_addr   = (uint32_t)UTIL::extract_two_bytes(vm->registers[11], 3) << 16 |
+                                         (uint32_t)UTIL::extract_two_bytes(vm->registers[11], 1);
 
                 // Error check
                 /*
@@ -337,12 +337,12 @@ namespace EXTERNAL
             case NABLA_NET_DEVICE_COMMAND_TCP_OUT_RECEIVE :
             {
                 // Extract information for recv
-                uint16_t num_bytes = util_extract_two_bytes(vm->registers[10], 2);
+                uint16_t num_bytes = UTIL::extract_two_bytes(vm->registers[10], 2);
 
-                uint32_t gs_start_addr = (uint32_t)util_extract_two_bytes(vm->registers[11], 7) << 16 |
-                                         (uint32_t)util_extract_two_bytes(vm->registers[11], 5);
-                uint32_t gs_end_addr   = (uint32_t)util_extract_two_bytes(vm->registers[11], 3) << 16 |
-                                         (uint32_t)util_extract_two_bytes(vm->registers[11], 1);
+                uint32_t gs_start_addr = (uint32_t)UTIL::extract_two_bytes(vm->registers[11], 7) << 16 |
+                                         (uint32_t)UTIL::extract_two_bytes(vm->registers[11], 5);
+                uint32_t gs_end_addr   = (uint32_t)UTIL::extract_two_bytes(vm->registers[11], 3) << 16 |
+                                         (uint32_t)UTIL::extract_two_bytes(vm->registers[11], 1);
 
                 // Error check
                 /*
@@ -422,11 +422,11 @@ namespace EXTERNAL
             return;
         }
 
-        uint8_t command = util_extract_byte(vm->registers[10], 5);
+        uint8_t command = UTIL::extract_byte(vm->registers[10], 5);
 
         // All of the specific commands for TCP IN has an 'id' associated
         //
-        uint16_t object_id = util_extract_two_bytes(vm->registers[10], 4);
+        uint16_t object_id = UTIL::extract_two_bytes(vm->registers[10], 4);
         
         //  --------------------- Check 'specific' commands second ---------------------------
         //
@@ -468,7 +468,7 @@ namespace EXTERNAL
                     return;
                 }
 
-                uint16_t back_log = util_extract_two_bytes(vm->registers[10], 4);
+                uint16_t back_log = UTIL::extract_two_bytes(vm->registers[10], 4);
 
                 int result = -255;
                 sockets_listen(ns, back_log, &result);
@@ -544,9 +544,9 @@ namespace EXTERNAL
             return;
         }
 
-        uint8_t command = util_extract_byte(vm->registers[10], 5);
+        uint8_t command = UTIL::extract_byte(vm->registers[10], 5);
 
-        uint16_t object_id = util_extract_two_bytes(vm->registers[10], 4);
+        uint16_t object_id = UTIL::extract_two_bytes(vm->registers[10], 4);
 
         //  --------------------- Check 'specific' commands second ---------------------------
         //
@@ -579,7 +579,7 @@ namespace EXTERNAL
             }
             case NABLA_NET_DEVICE_COMMAND_UDP_SEND   :
             {
-                uint16_t remote_object_id = util_extract_two_bytes(vm->registers[12], 1);
+                uint16_t remote_object_id = UTIL::extract_two_bytes(vm->registers[12], 1);
 
                 // Get socket object.
                 nabla_socket * ns = sockpool_get_socket(nd->socket_pool, object_id);
@@ -602,12 +602,12 @@ namespace EXTERNAL
                 }
 
                 // Extract information for send
-                uint16_t num_bytes = util_extract_two_bytes(vm->registers[10], 2);
+                uint16_t num_bytes = UTIL::extract_two_bytes(vm->registers[10], 2);
 
-                uint32_t gs_start_addr = (uint32_t)util_extract_two_bytes(vm->registers[11], 7) << 16 |
-                                         (uint32_t)util_extract_two_bytes(vm->registers[11], 5);
-                uint32_t gs_end_addr   = (uint32_t)util_extract_two_bytes(vm->registers[11], 3) << 16 |
-                                         (uint32_t)util_extract_two_bytes(vm->registers[11], 1);
+                uint32_t gs_start_addr = (uint32_t)UTIL::extract_two_bytes(vm->registers[11], 7) << 16 |
+                                         (uint32_t)UTIL::extract_two_bytes(vm->registers[11], 5);
+                uint32_t gs_end_addr   = (uint32_t)UTIL::extract_two_bytes(vm->registers[11], 3) << 16 |
+                                         (uint32_t)UTIL::extract_two_bytes(vm->registers[11], 1);
 
                 // Error check
                 /*
@@ -649,15 +649,15 @@ namespace EXTERNAL
             }
             case NABLA_NET_DEVICE_COMMAND_UDP_RECEIVE:
             {
-                uint16_t remote_object_id = util_extract_two_bytes(vm->registers[12], 1);
+                uint16_t remote_object_id = UTIL::extract_two_bytes(vm->registers[12], 1);
 
                 // Extract information for recv
-                uint16_t num_bytes = util_extract_two_bytes(vm->registers[10], 2);
+                uint16_t num_bytes = UTIL::extract_two_bytes(vm->registers[10], 2);
 
-                uint32_t gs_start_addr = (uint32_t)util_extract_two_bytes(vm->registers[11], 7) << 16 |
-                                        (uint32_t)util_extract_two_bytes(vm->registers[11], 5);
-                uint32_t gs_end_addr   = (uint32_t)util_extract_two_bytes(vm->registers[11], 3) << 16 |
-                                        (uint32_t)util_extract_two_bytes(vm->registers[11], 1);
+                uint32_t gs_start_addr = (uint32_t)UTIL::extract_two_bytes(vm->registers[11], 7) << 16 |
+                                        (uint32_t)UTIL::extract_two_bytes(vm->registers[11], 5);
+                uint32_t gs_end_addr   = (uint32_t)UTIL::extract_two_bytes(vm->registers[11], 3) << 16 |
+                                        (uint32_t)UTIL::extract_two_bytes(vm->registers[11], 1);
 
                 // Error check
                 /*
@@ -765,7 +765,7 @@ namespace EXTERNAL
 
         NETDevice nd = { this->active, this->socket_pool };
 
-        uint16_t sub_id = util_extract_byte(registers[10], 6);
+        uint16_t sub_id = UTIL::extract_byte(registers[10], 6);
 
 
         //  Making it here means that the device is active. Process the command (or attempt to)

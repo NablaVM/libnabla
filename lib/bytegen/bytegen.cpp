@@ -221,7 +221,7 @@ namespace NABLA
     {
         std::vector<uint8_t> result;
 
-        uint64_t packed = ENDIAN::conditional_to_le_64(util_convert_double_to_uint64(dval));
+        uint64_t packed = ENDIAN::conditional_to_le_64(UTIL::convert_double_to_uint64(dval));
 
         result.push_back( NABLA::VSYS::CONST_DBL      );
         result.push_back( (packed & 0xFF00000000000000) >> 56 );

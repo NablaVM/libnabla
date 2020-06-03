@@ -237,7 +237,7 @@ namespace TEST
     
     static uint64_t doubleToUint64(double val)
     {
-        return util_convert_double_to_uint64(val);
+        return UTIL::convert_double_to_uint64(val);
     }
 
     // ---------------------------------------------------------------
@@ -246,7 +246,7 @@ namespace TEST
     
     static double uint64ToDouble(uint64_t val)
     {
-        return util_convert_uint64_to_double(val);
+        return UTIL::convert_uint64_to_double(val);
     }
 
     // ---------------------------------------------------------------

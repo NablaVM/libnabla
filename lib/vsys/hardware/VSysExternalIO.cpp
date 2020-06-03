@@ -106,11 +106,11 @@ namespace EXTERNAL
 
     std::string process_build_file_name(struct VM * vm)
     {
-        uint32_t startAddress  = util_extract_two_bytes(vm->registers[11], 7) << 16;
-                 startAddress |= util_extract_two_bytes(vm->registers[11], 5);
+        uint32_t startAddress  = UTIL::extract_two_bytes(vm->registers[11], 7) << 16;
+                 startAddress |= UTIL::extract_two_bytes(vm->registers[11], 5);
 
-        uint32_t endAddress  = util_extract_two_bytes(vm->registers[11], 3) << 16;
-                 endAddress |= util_extract_two_bytes(vm->registers[11], 1);
+        uint32_t endAddress  = UTIL::extract_two_bytes(vm->registers[11], 3) << 16;
+                 endAddress |= UTIL::extract_two_bytes(vm->registers[11], 1);
 
         uint64_t fileNameSize = ((endAddress - startAddress));
 
@@ -134,7 +134,7 @@ namespace EXTERNAL
 
     void process_io_disk_in(struct IODevice * io, struct VM * vm)
     {
-        uint8_t instruction = util_extract_byte(vm->registers[10], 5);
+        uint8_t instruction = UTIL::extract_byte(vm->registers[10], 5);
 
         switch(instruction)
         {
@@ -182,8 +182,8 @@ namespace EXTERNAL
                     return;
                 }
 
-                uint32_t numBytesToRead  = util_extract_two_bytes(vm->registers[10], 4) << 16;
-                         numBytesToRead |= util_extract_two_bytes(vm->registers[10], 2);
+                uint32_t numBytesToRead  = UTIL::extract_two_bytes(vm->registers[10], 4) << 16;
+                         numBytesToRead |= UTIL::extract_two_bytes(vm->registers[10], 2);
 
                 uint64_t bytesReadIn = 0;
 
@@ -215,8 +215,8 @@ namespace EXTERNAL
                     return;
                 }
 
-                uint32_t seekLoc  = util_extract_two_bytes(vm->registers[10], 4) << 16;
-                        seekLoc |= util_extract_two_bytes(vm->registers[10], 2);
+                uint32_t seekLoc  = UTIL::extract_two_bytes(vm->registers[10], 4) << 16;
+                        seekLoc |= UTIL::extract_two_bytes(vm->registers[10], 2);
 
                 if( 0 == fseek( io->filePointer , seekLoc, SEEK_SET ) )
                 {
@@ -273,8 +273,8 @@ namespace EXTERNAL
 
     void process_io_disk_out(struct IODevice * io, struct VM * vm)
     {
-        uint8_t instruction = util_extract_byte(vm->registers[10], 5);
-        uint8_t mode        = util_extract_byte(vm->registers[10], 4);
+        uint8_t instruction = UTIL::extract_byte(vm->registers[10], 5);
+        uint8_t mode        = UTIL::extract_byte(vm->registers[10], 4);
 
         switch(instruction)
         {
@@ -339,7 +339,7 @@ namespace EXTERNAL
                 // Write each byte in the register
                 for(int i = 7; i >= 0; i--)
                 {
-                    uint8_t c =  util_extract_byte(vm->registers[11], i);
+                    uint8_t c =  UTIL::extract_byte(vm->registers[11], i);
                     fputc((char)c, io->filePointer);
                 }
 
@@ -372,11 +372,11 @@ namespace EXTERNAL
         }
 
         // Get the number of bytes to read in
-        uint32_t bytesToRead = util_extract_two_bytes(vm->registers[10], 5) << 16;
-        bytesToRead |= util_extract_two_bytes(vm->registers[10], 3);
+        uint32_t bytesToRead = UTIL::extract_two_bytes(vm->registers[10], 5) << 16;
+        bytesToRead |= UTIL::extract_two_bytes(vm->registers[10], 3);
 
         // Get the termination byte
-        uint8_t term = util_extract_byte(vm->registers[10], 1);
+        uint8_t term = UTIL::extract_byte(vm->registers[10], 1);
 
         // Buf to read a byte into
         char buf;
@@ -431,7 +431,7 @@ namespace EXTERNAL
         for(int64_t i = 7; i >= 0; i--)
         {
             // Extract each byte of data from output data
-            char currentByte = (char)util_extract_byte(out, i);
+            char currentByte = (char)UTIL::extract_byte(out, i);
 
             // Write that byte
             if(-1 == write(stream, &currentByte, 1))
@@ -505,7 +505,7 @@ namespace EXTERNAL
         };
 
         // Get the target
-        uint8_t target = util_extract_byte(registers[10], 6);
+        uint8_t target = UTIL::extract_byte(registers[10], 6);
 
         // Execute base on target
         switch (target)
