@@ -5,7 +5,15 @@
 #include <iostream>
 
 #include "util.hpp"
+#include "endian.hpp"
 
+#if BYTE_ORDER == BIG_ENDIAN
+    #warning "VSysExecutionContext: BIG_ENDIAN Systems have not been fully tested"
+#endif 
+
+#if BYTE_ORDER == PDP_ENDIAN
+    #warning "VSysExecutionContext: PDP_ENDIAN Systems have not been fully tested"
+#endif
 
 namespace NABLA
 {

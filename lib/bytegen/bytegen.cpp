@@ -5,6 +5,7 @@
 #include <bitset>
 
 #include "util.hpp"
+#include "endian.hpp"
 
 namespace NABLA
 {
@@ -97,6 +98,8 @@ namespace NABLA
     
     Bytegen::Instruction Bytegen::createFunctionStart(std::string name, uint64_t numInstructions, uint32_t &address)
     {
+        numInstructions = ENDIAN::conditional_to_le_64(numInstructions);
+
         Instruction ins;
 
         address = functionCounter;
@@ -160,6 +163,8 @@ namespace NABLA
     
     std::vector<uint8_t> Bytegen::createConstantInt   (uint64_t val, Integers integerType)
     {
+        val = ENDIAN::conditional_to_le_64(val);
+
         std::vector<uint8_t> result;
 
         /*
@@ -216,7 +221,7 @@ namespace NABLA
     {
         std::vector<uint8_t> result;
 
-        uint64_t packed = util_convert_double_to_uint64(dval);
+        uint64_t packed = ENDIAN::conditional_to_le_64(util_convert_double_to_uint64(dval));
 
         result.push_back( NABLA::VSYS::CONST_DBL      );
         result.push_back( (packed & 0xFF00000000000000) >> 56 );
@@ -276,7 +281,7 @@ namespace NABLA
                 ins.bytes[0] = (op);
                 ins.bytes[1] = (integerToRegister(arg1));
 
-                uint16_t num = static_cast<uint16_t>(arg2);
+                uint16_t num = ENDIAN::conditional_to_le_16( static_cast<uint16_t>(arg2) );
 
                 ins.bytes[2] = ( (num & 0xFF00) >> 8 ) ;
 
@@ -297,7 +302,7 @@ namespace NABLA
                 ins.bytes[1] = (integerToRegister(arg1));
                 ins.bytes[2] = (integerToRegister(arg2));
 
-                uint16_t num = static_cast<uint16_t>(arg3);
+                uint16_t num = ENDIAN::conditional_to_le_16( static_cast<uint16_t>(arg3) );
 
                 ins.bytes[3] = ( (num & 0xFF00) >> 8 ) ;
 
@@ -315,12 +320,12 @@ namespace NABLA
                 ins.bytes[0] = (op);
                 ins.bytes[1] = (integerToRegister(arg1));
 
-                uint16_t num = static_cast<uint16_t>(arg2);
+                uint16_t num = ENDIAN::conditional_to_le_16( static_cast<uint16_t>(arg2) );
 
                 ins.bytes[2] = ( (num & 0xFF00) >> 8 ) ;
                 ins.bytes[3] = ( (num & 0x00FF) >> 0 ) ;
 
-                uint16_t num1 = static_cast<uint16_t>(arg3);
+                uint16_t num1 = ENDIAN::conditional_to_le_16( static_cast<uint16_t>(arg3) );
 
                 ins.bytes[4] = ( (num1 & 0xFF00) >> 8 ) ;
                 ins.bytes[5] = ( (num1 & 0x00FF) >> 0 ) ;
@@ -348,6 +353,8 @@ namespace NABLA
     
     Bytegen::Instruction Bytegen::createBranchInstruction(BranchTypes type, uint8_t reg1, uint8_t reg2, uint32_t location)
     {
+        location = ENDIAN::conditional_to_le_32( location );
+
         Instruction ins;
 
         // Set the instruction op
@@ -387,6 +394,8 @@ namespace NABLA
     
     Bytegen::Instruction Bytegen::createJumpInstruction(uint32_t location)
     {
+        location = ENDIAN::conditional_to_le_32( location );
+
         Instruction ins;
 
         ins.bytes[0] = NABLA::VSYS::INS_JUMP;
@@ -425,6 +434,8 @@ namespace NABLA
         }
         else
         {
+            arg2 = ENDIAN::conditional_to_le_32( arg2 );
+
             ins.bytes[0] = (NABLA::VSYS::INS_MOV | 0x01);
             ins.bytes[1] = integerToRegister(reg1) ;
             ins.bytes[2] = (arg2 & 0xFF000000) >> 24 ;
@@ -537,6 +548,8 @@ namespace NABLA
         {
             case Bytegen::LoadStoreSetup::NUMBER_BASED:
             {
+                location = ENDIAN::conditional_to_le_32( location );
+
                 ins.bytes[0] = NABLA::VSYS::INS_STB;
                 ins.bytes[1] = getStackAddress(stack);
                 ins.bytes[2] = (location & 0xFF000000) >> 24 ;
@@ -584,6 +597,8 @@ namespace NABLA
         {
             case Bytegen::LoadStoreSetup::NUMBER_BASED:
             {
+                location = ENDIAN::conditional_to_le_32( location );
+
                 ins.bytes[0] = NABLA::VSYS::INS_STW;
                 ins.bytes[1] = getStackAddress(stack);
                 ins.bytes[2] = (location & 0xFF000000) >> 24 ;
@@ -631,6 +646,8 @@ namespace NABLA
         {
             case Bytegen::LoadStoreSetup::NUMBER_BASED:
             {
+                location = ENDIAN::conditional_to_le_32( location );
+
                 ins.bytes[0] = NABLA::VSYS::INS_LDB;
                 ins.bytes[1] = integerToRegister(reg);
                 ins.bytes[2] = getStackAddress(stack);
@@ -678,6 +695,8 @@ namespace NABLA
         {
             case Bytegen::LoadStoreSetup::NUMBER_BASED:
             {
+                location = ENDIAN::conditional_to_le_32( location );
+
                 ins.bytes[0] = NABLA::VSYS::INS_LDW;
                 ins.bytes[1] = integerToRegister(reg);
                 ins.bytes[2] = getStackAddress(stack);
@@ -782,6 +801,10 @@ namespace NABLA
 
     std::vector<Bytegen::Instruction> Bytegen::createCallInstruction(uint32_t funcFrom, uint32_t ret, uint32_t address)
     {
+        funcFrom = ENDIAN::conditional_to_le_32( funcFrom );
+        ret      = ENDIAN::conditional_to_le_32( ret      );
+        address  = ENDIAN::conditional_to_le_32( address  );
+
         std::vector<Instruction> ins;
 
         Instruction cssf;
@@ -830,6 +853,8 @@ namespace NABLA
 
     Bytegen::Instruction Bytegen::createPcallInstruction(uint32_t address)
     {
+        address  = ENDIAN::conditional_to_le_32( address  );
+
         Instruction ins;
         ins.bytes[0] = NABLA::VSYS::INS_PCALL;
         ins.bytes[1] = (address & 0xFF000000) >> 24;
@@ -848,6 +873,8 @@ namespace NABLA
 
     std::vector<uint8_t> Bytegen::createSegConstInstruction(uint64_t count)
     {
+        count  = ENDIAN::conditional_to_le_64( count  );
+
         std::vector<uint8_t> result;
 
         result.push_back( NABLA::VSYS::INS_SEG_CONST );
@@ -869,6 +896,8 @@ namespace NABLA
 
     std::vector<uint8_t> Bytegen::createSegFuncInstruction(uint64_t entryAddress)
     {
+        entryAddress  = ENDIAN::conditional_to_le_64( entryAddress  );
+
         std::vector<uint8_t> result;
 
         result.push_back( NABLA::VSYS::INS_SEG_FUNC );
@@ -954,7 +983,7 @@ namespace NABLA
                 ins.bytes[0] = (op);
                 ins.bytes[1] = (integerToRegister(arg1));
 
-                uint16_t num = static_cast<uint16_t>(arg2);
+                uint16_t num = ENDIAN::conditional_to_le_16( static_cast<uint16_t>(arg2) );
 
                 ins.bytes[2] = ( (num & 0xFF00) >> 8 ) ;
 
@@ -987,7 +1016,7 @@ namespace NABLA
                 ins.bytes[1] = (integerToRegister(arg1));
                 ins.bytes[2] = (integerToRegister(arg2));
 
-                uint16_t num = static_cast<uint16_t>(arg3);
+                uint16_t num = ENDIAN::conditional_to_le_16( static_cast<uint16_t>(arg3) );
 
                 ins.bytes[3] = ( (num & 0xFF00) >> 8 ) ;
 
@@ -1011,12 +1040,12 @@ namespace NABLA
                 ins.bytes[0] = (op);
                 ins.bytes[1] = (integerToRegister(arg1));
 
-                uint16_t num = static_cast<uint16_t>(arg2);
+                uint16_t num = ENDIAN::conditional_to_le_16( static_cast<uint16_t>(arg2) );
 
                 ins.bytes[2] = ( (num & 0xFF00) >> 8 ) ;
                 ins.bytes[3] = ( (num & 0x00FF) >> 0 ) ;
 
-                uint16_t num1 = static_cast<uint16_t>(arg3);
+                uint16_t num1 = ENDIAN::conditional_to_le_16( static_cast<uint16_t>(arg3) );
 
                 ins.bytes[4] = ( (num1 & 0xFF00) >> 8 ) ;
                 ins.bytes[5] = ( (num1 & 0x00FF) >> 0 ) ;

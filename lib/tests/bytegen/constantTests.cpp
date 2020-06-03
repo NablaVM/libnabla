@@ -1,5 +1,6 @@
 #include <iostream>
 #include "bytegen.hpp"
+#include "endian.hpp"
 #include "VSysInstructions.hpp"
 #include <random>
 
@@ -14,7 +15,7 @@ namespace
         std::random_device rd;
         std::mt19937 gen(rd());
         std::uniform_int_distribution<uint16_t> dis(low, high);
-        return dis(gen);
+        return ENDIAN::conditional_to_le_16( dis(gen) );
     }
 
     uint32_t getRandom32(uint32_t low, uint32_t high)
@@ -22,7 +23,7 @@ namespace
         std::random_device rd;
         std::mt19937 gen(rd());
         std::uniform_int_distribution<uint32_t> dis(low, high);
-        return dis(gen);
+        return ENDIAN::conditional_to_le_32( dis(gen) );
     }
 
     uint64_t getRandom64(uint64_t low, uint64_t high)
@@ -30,7 +31,7 @@ namespace
         std::random_device rd;
         std::mt19937 gen(rd());
         std::uniform_int_distribution<uint64_t> dis(low, high);
-        return dis(gen);
+        return ENDIAN::conditional_to_le_64( dis(gen) );
     }
     
     double getRandomFp(double low, double high)
@@ -158,7 +159,7 @@ TEST(ConstantTests, doublePrecisionFp)
 
         std::vector<uint8_t> expected;
 
-        uint64_t packed = util_convert_double_to_uint64(dval);
+        uint64_t packed = ENDIAN::conditional_to_le_64( util_convert_double_to_uint64(dval) );
 
         expected.push_back( NABLA::VSYS::CONST_DBL      );
         expected.push_back( (packed & 0xFF00000000000000) >> 56 );

@@ -35,26 +35,32 @@ uint8_t util_extract_byte(uint64_t data, uint8_t idx)
 
 uint16_t util_extract_two_bytes(uint64_t data, uint8_t idx)
 {
-
+    // This method assumes that data is in little endian (from VM)
     assert(idx > 0);
+
+#if BYTE_ORDER == LITTLE_ENDIAN
     return (data >> (8*(idx-1))) & 0xffff;
+#else
+    return ENDIAN::conditional_from_le_16( (data >> (8*(idx-1))) & 0xffff );
+#endif
 }
 
 // --------------------------------------------------------------
-//
+// Caller needs to handle endianess
 // --------------------------------------------------------------
 
 double util_convert_uint64_to_double(uint64_t val)
 {
-    // Extract from our value
-    DoubleExtract d; d.bin = val;
+    DoubleExtract d;
+
+    d.bin = val;
 
     // Return double
     return d.d;
 }
 
 // --------------------------------------------------------------
-//
+// Caller needs to handle endianess
 // --------------------------------------------------------------
 
 uint64_t util_convert_double_to_uint64(double val)

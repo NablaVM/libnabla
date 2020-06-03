@@ -15,12 +15,15 @@ struct DoubleDeconstructed
 //! \param data The data do get the byte from
 //! \param idx  The index of the byte to get
 //! \returns The byte extracted
+//! \note This method assumes data is in little endian
 uint8_t util_extract_byte(uint64_t data, uint8_t idx);
 
 //! \brief Extract two bytes from a uint64_t
 //! \param data The data do get the byte from
 //! \param idx  The index of the two byte to get
 //! \returns The bytes extracted
+//! \note This method assumes data is in little endian, but ensures the result
+//!       is in host endianess. This is done with VSysExecutionContext in mind
 uint16_t util_extract_two_bytes(uint64_t data, uint8_t idx);
 
 //! \brief Convert a uint64_t to a double
@@ -40,6 +43,8 @@ uint64_t util_convert_double_to_uint64(double val);
 //! \retval 0 The doubles are not equal
 //! \note Uses a precision of 0.00001
 uint8_t util_check_double_equal(double lhs, double rhs);
+
+// [ The blow functions are intended for future updates - Not used as of 3/ June/ 2020 ]
 
 //! \brief Deconstruct a double into its base components
 //! \param val The double to deconstruct
