@@ -8,9 +8,11 @@
 extern "C"
 {
     #include "sockets.h"
-    #include "util.h"
     #include <assert.h>
+    #include <stdlib.h>
 }
+
+#include "util.hpp"
 
 namespace NABLA
 {
@@ -18,6 +20,14 @@ namespace VSYS
 {
 namespace EXTERNAL
 {
+    namespace
+    {
+        inline int64_t ugh_abs(int64_t val) 
+        {
+            if(val < 0) return val * -1;
+            return val;
+        }
+    }
 
     constexpr int NABLA_NET_DEVICE_SUB_ID_TCP_OUT          =  0;
     constexpr int NABLA_NET_DEVICE_SUB_ID_TCP_IN           =  1;
@@ -297,7 +307,7 @@ namespace EXTERNAL
                 end address given, the send will be cancelled and an error will be 
                 reported in r11.
                 */
-                if(num_bytes > abs(gs_start_addr - gs_end_addr)* 8)
+                if(num_bytes > ugh_abs(gs_start_addr - gs_end_addr)* 8)
                 {
                     vm->registers[11] = 0;
                     return;
@@ -340,7 +350,7 @@ namespace EXTERNAL
                 end address given, the send will be cancelled and an error will be 
                 reported in r11.
                 */
-                if(num_bytes > abs(gs_start_addr - gs_end_addr)* 8)
+                if(num_bytes > ugh_abs(gs_start_addr - gs_end_addr)* 8)
                 {
                     vm->registers[11] = 0;
                     return;
@@ -605,7 +615,7 @@ namespace EXTERNAL
                 end address given, the send will be cancelled and an error will be 
                 reported in r11.
                 */
-                if(num_bytes > abs(gs_start_addr - gs_end_addr)* 8)
+                if(num_bytes > ugh_abs(gs_start_addr - gs_end_addr)* 8)
                 {
                     vm->registers[11] = 0;
                     vm->registers[12] = 0;
@@ -655,7 +665,7 @@ namespace EXTERNAL
                 end address given, the send will be cancelled and an error will be 
                 reported in r11.
                 */
-                if(num_bytes > abs(gs_start_addr - gs_end_addr)* 8)
+                if(num_bytes > ugh_abs(gs_start_addr - gs_end_addr)* 8)
                 {
                     vm->registers[11] = 0;
                     vm->registers[12] = 0;

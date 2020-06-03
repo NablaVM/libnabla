@@ -2,10 +2,10 @@
 
 extern "C"
 {
-    #include "util.h"
     #include <time.h>
 }
 
+#include "util.hpp"
 #include <limits>
 #include <random>
 

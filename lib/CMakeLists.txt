@@ -31,6 +31,8 @@ include(${CMAKE_SOURCE_DIR}/cmake/SetEnv.cmake)
 # Set include directories
 #-------------------------------------------------
 
+include_directories(/usr/local/include)
+include_directories(${CMAKE_SOURCE_DIR}/endian)
 include_directories(${CMAKE_SOURCE_DIR}/assembler)
 include_directories(${PROJECT_SOURCE_DIR}/bytegen)
 include_directories(${CMAKE_SOURCE_DIR}/sockets)
@@ -46,9 +48,10 @@ include_directories(${CMAKE_SOURCE_DIR}/vsys/hardware)
 #-------------------------------------------------
 
 set(HEADERS
+    ${CMAKE_SOURCE_DIR}/endian/endian.hpp
     ${CMAKE_SOURCE_DIR}/assembler/assembler.hpp
     ${CMAKE_SOURCE_DIR}/bytegen/bytegen.hpp
-    ${CMAKE_SOURCE_DIR}/util/util.h
+    ${CMAKE_SOURCE_DIR}/util/util.hpp
     ${CMAKE_SOURCE_DIR}/sockets/sockets.h
     ${CMAKE_SOURCE_DIR}/sockets/sockpool.h
     ${CMAKE_SOURCE_DIR}/json/json.hpp
@@ -72,7 +75,7 @@ set(HEADERS
 set(SOURCES
     ${CMAKE_SOURCE_DIR}/assembler/assembler.cpp
     ${CMAKE_SOURCE_DIR}/bytegen/bytegen.cpp
-    ${CMAKE_SOURCE_DIR}/util/util.c
+    ${CMAKE_SOURCE_DIR}/util/util.cpp
     ${CMAKE_SOURCE_DIR}/sockets/sockets.c
     ${CMAKE_SOURCE_DIR}/sockets/sockpool.c
     ${CMAKE_SOURCE_DIR}/scopetree/scopetree.cpp

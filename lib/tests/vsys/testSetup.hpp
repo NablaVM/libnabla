@@ -6,7 +6,6 @@
 #include "bytegen.hpp"
 #include <random>
 #include <vector>
-#include <ieee754.h>
 #include <limits>
 
 #include "VSysMachine.hpp"
@@ -14,6 +13,8 @@
 #include "VSysExecutionContext.hpp"
 #include "VSysExecutionReturns.hpp"
 #include <vector>
+
+#include "util.hpp"
 
 // Always include this last
 #include "CppUTest/TestHarness.h"
@@ -236,13 +237,7 @@ namespace TEST
     
     static uint64_t doubleToUint64(double val)
     {
-        ieee754_double ied;
-        ied.d = val;
-        uint64_t packed = (uint64_t)ied.ieee.negative  << 63| 
-                          (uint64_t)ied.ieee.exponent  << 52|
-                          (uint64_t)ied.ieee.mantissa0 << 32|
-                          (uint64_t)ied.ieee.mantissa1 << 0;
-        return packed;
+        return util_convert_double_to_uint64(val);
     }
 
     // ---------------------------------------------------------------
@@ -251,16 +246,7 @@ namespace TEST
     
     static double uint64ToDouble(uint64_t val)
     {
-        union deval
-        {
-            uint64_t val;
-            double d;
-        };
-
-        union deval d; d.val = val;
-
-        // Return double
-        return d.d;
+        return util_convert_uint64_to_double(val);
     }
 
     // ---------------------------------------------------------------

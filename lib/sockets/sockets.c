@@ -23,6 +23,9 @@ nabla_socket * sockets_create_socket_raw_addr(int domain, int type,   int protoc
 
     assert(ns);
 
+#ifdef __APPLE__
+    ns->socket_desc = socket(domain, type, protocol);
+#else
     if(0 == setNonBlocking)
     {
         ns->socket_desc = socket(domain, type, protocol);
@@ -31,6 +34,7 @@ nabla_socket * sockets_create_socket_raw_addr(int domain, int type,   int protoc
     {
         ns->socket_desc = socket(domain, type | SOCK_NONBLOCK, protocol);
     }
+#endif
 
     if(ns->socket_desc == -1)
     {

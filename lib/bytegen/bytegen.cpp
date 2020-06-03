@@ -3,7 +3,8 @@
 #include "VSysInstructions.hpp"
 #include <iostream>
 #include <bitset>
-#include <ieee754.h>
+
+#include "util.hpp"
 
 namespace NABLA
 {
@@ -215,14 +216,7 @@ namespace NABLA
     {
         std::vector<uint8_t> result;
 
-        ieee754_double ied;
-
-        ied.d = dval;
-
-        uint64_t packed = (uint64_t)ied.ieee.negative  << 63| 
-                          (uint64_t)ied.ieee.exponent  << 52|
-                          (uint64_t)ied.ieee.mantissa0 << 32|
-                          (uint64_t)ied.ieee.mantissa1 << 0;
+        uint64_t packed = util_convert_double_to_uint64(dval);
 
         result.push_back( NABLA::VSYS::CONST_DBL      );
         result.push_back( (packed & 0xFF00000000000000) >> 56 );

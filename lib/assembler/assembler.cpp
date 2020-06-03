@@ -1486,7 +1486,7 @@ bool instruction_push()
         return false;
     }
 
-    if(!currentPieces.size() == 3)
+    if(!(currentPieces.size() == 3))
     {
         std::cerr << "Invalid 'push' instruction : " << currentLine << std::endl;
         return false; 
@@ -1543,7 +1543,7 @@ bool instruction_pop()
         return false;
     }
 
-    if(!currentPieces.size() == 3)
+    if(!(currentPieces.size() == 3))
     {
         std::cerr << "Invalid 'pop' instruction : " << currentLine << std::endl;
         return false; 
@@ -1857,7 +1857,7 @@ bool instruction_jmp()
         return false;
     }
 
-    if(!currentPieces.size() == 2)
+    if(!(currentPieces.size() == 2))
     {
         std::cerr << "Invalid jump instruction : " << currentLine << std::endl;
         return false;
@@ -2755,7 +2755,7 @@ bool instruction_pushw()
         return false;
     }
 
-    if(!currentPieces.size() == 3)
+    if(!(currentPieces.size() == 3))
     {
         std::cerr << "Invalid 'pushw' instruction : " << currentLine << std::endl;
         return false; 
@@ -2812,7 +2812,7 @@ bool instruction_popw()
         return false;
     }
 
-    if(!currentPieces.size() == 3)
+    if(!(currentPieces.size() == 3))
     {
         std::cerr << "Invalid 'popw' instruction : " << currentLine << std::endl;
         return false; 

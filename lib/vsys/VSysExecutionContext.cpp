@@ -4,10 +4,7 @@
 
 #include <iostream>
 
-extern "C"
-{
-    #include "util.h"
-}
+#include "util.hpp"
 
 
 namespace NABLA
