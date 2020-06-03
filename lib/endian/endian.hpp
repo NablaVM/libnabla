@@ -126,75 +126,85 @@
 
 // Added by Josh Bosley - 3/ June/ 2020
 
-// -------------------------------------------------------------
-//
-// -------------------------------------------------------------
-
-static inline uint16_t endian_conditional_to_be_16(uint16_t val)
+namespace ENDIAN
 {
-#if ((BYTE_ORDER == LITTLE_ENDIAN) || (BYTE_ORDER == PDP_ENDIAN))
-	val = htobe16(val);
+	// -------------------------------------------------------------
+	//
+	// -------------------------------------------------------------
+
+	static inline uint16_t conditional_to_le_16(uint16_t val)
+	{
+#if BYTE_ORDER == LITTLE_ENDIAN
+		return val;
+#else
+		return htole16(val);
 #endif
-	return val;
+	}
+
+	// -------------------------------------------------------------
+	//
+	// -------------------------------------------------------------
+
+	static inline uint32_t conditional_to_le_32(uint32_t val)
+	{
+#if BYTE_ORDER == LITTLE_ENDIAN
+		return val;
+#else
+		return htole32(val);
+#endif
+	}
+
+	// -------------------------------------------------------------
+	//
+	// -------------------------------------------------------------
+
+	static inline uint64_t conditional_to_le_64(uint64_t val)
+	{
+#if BYTE_ORDER == LITTLE_ENDIAN
+		return val;
+#else
+		return htole64(val);
+#endif
+	}
+
+	// -------------------------------------------------------------
+	//
+	// -------------------------------------------------------------
+
+	static inline uint16_t conditional_from_le_16(uint16_t val)
+	{
+#if BYTE_ORDER == LITTLE_ENDIAN
+		return val;
+#else
+		return le16toh(val);
+#endif
+	}
+
+	// -------------------------------------------------------------
+	//
+	// -------------------------------------------------------------
+
+	static inline uint32_t conditional_from_le_32(uint32_t val)
+	{
+#if BYTE_ORDER == LITTLE_ENDIAN
+		return val;
+#else
+		return le32toh(val);
+#endif
+	}
+
+	// -------------------------------------------------------------
+	//
+	// -------------------------------------------------------------
+
+	static inline uint64_t conditional_from_le_64(uint64_t val)
+	{
+#if BYTE_ORDER == LITTLE_ENDIAN
+		return val;
+#else 
+		return le64toh(val);
+#endif
+	}
+	#endif
+
 }
-
-// -------------------------------------------------------------
-//
-// -------------------------------------------------------------
-
-static inline uint32_t endian_conditional_to_be_32(uint32_t val)
-{
-#if ((BYTE_ORDER == LITTLE_ENDIAN) || (BYTE_ORDER == PDP_ENDIAN))
-	val = htobe32(val);
-#endif
-	return val;
-}
-
-// -------------------------------------------------------------
-//
-// -------------------------------------------------------------
-
-static inline uint64_t endian_conditional_to_be_64(uint64_t val)
-{
-#if ((BYTE_ORDER == LITTLE_ENDIAN) || (BYTE_ORDER == PDP_ENDIAN))
-	val = htobe64(val);
-#endif
-	return val;
-}
-
-// -------------------------------------------------------------
-//
-// -------------------------------------------------------------
-
-static inline uint16_t endian_conditional_from_be_16(uint16_t val)
-{
-#if ((BYTE_ORDER == LITTLE_ENDIAN) || (BYTE_ORDER == PDP_ENDIAN))
-	val = be16toh(val);
-#endif
-	return val;
-}
-
-// -------------------------------------------------------------
-//
-// -------------------------------------------------------------
-
-static inline uint32_t endian_conditional_from_be_32(uint32_t val)
-{
-#if ((BYTE_ORDER == LITTLE_ENDIAN) || (BYTE_ORDER == PDP_ENDIAN))
-	val = be32toh(val);
-#endif
-	return val;
-}
-
-// -------------------------------------------------------------
-//
-// -------------------------------------------------------------
-
-static inline uint64_t endian_conditional_from_be_64(uint64_t val)
-{
-#if ((BYTE_ORDER == LITTLE_ENDIAN) || (BYTE_ORDER == PDP_ENDIAN))
-	val = be64toh(val);
-#endif
-	return val;
-}
-#endif

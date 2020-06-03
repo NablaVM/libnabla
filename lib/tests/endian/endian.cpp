@@ -53,54 +53,28 @@ TEST_GROUP(EndianTests)
 // 
 // ---------------------------------------------------------------
 
-#if ((BYTE_ORDER == LITTLE_ENDIAN) || (BYTE_ORDER == PDP_ENDIAN))
 
-TEST(EndianTests, AllEndianTests)
+TEST(EndianTests, NonBigendianTests)
 {
     for(int i = 0; i < 100; i++)
     {
-        uint16_t r16 = getRandomU16(1024, std::numeric_limits<uint16_t>::max());
-        uint32_t r32 = getRandomU32(1024, std::numeric_limits<uint32_t>::max());
-        uint64_t r64 = getRandomU64(1024, std::numeric_limits<uint64_t>::max());
+        uint16_t r16 = getRandomU16(1024, 60000 );
+        uint32_t r32 = getRandomU32(1024, 100000);
+        uint64_t r64 = getRandomU64(1024, 100000);
 
-        uint16_t be_r16 = endian_conditional_to_be_16(r16);
-        uint32_t be_r32 = endian_conditional_to_be_32(r32);
-        uint64_t be_r64 = endian_conditional_to_be_64(r64);
+        uint16_t le_r16 = ENDIAN::conditional_to_le_16(r16);
+        uint32_t le_r32 = ENDIAN::conditional_to_le_32(r32);
+        uint64_t le_r64 = ENDIAN::conditional_to_le_64(r64);
 
-        CHECK_FALSE(r16 == be_r16);
-        CHECK_FALSE(r32 == be_r32);
-        CHECK_FALSE(r64 == be_r64);
-    }
-}
-
+#if BYTE_ORDER == LITTLE_ENDIAN
+        CHECK_TRUE(r16 == le_r16);
+        CHECK_TRUE(r32 == le_r32);
+        CHECK_TRUE(r64 == le_r64);
 #else
-
-TEST(EndianTests, AllEndianTests)
-{
-    for(int i = 0; i < 100; i++)
-    {
-        std::cout << "STARTING BIG ENDIAN" << std::endl;
-
-        uint16_t r16 = getRandomU16(1024, std::numeric_limits<uint16_t>::max());
-        std::cout << "r16" << (int)r16 << std::endl;
-
-        uint32_t r32 = getRandomU32(1024, std::numeric_limits<uint32_t>::max());
-        std::cout << "r32" << r32 << std::endl;
-
-        uint64_t r64 = getRandomU64(1024, std::numeric_limits<uint64_t>::max());
-        std::cout << "r64" << r64 << std::endl;
-
-        uint16_t be_r16 = endian_conditional_to_be_16(r16); std::cout << "-- 0 --" << std::endl;
-        uint32_t be_r32 = endian_conditional_to_be_32(r32); std::cout << "-- 1 --" << std::endl;
-        uint64_t be_r64 = endian_conditional_to_be_64(r64); std::cout << "-- 2 --" << std::endl;
-
-        CHECK_TRUE(r16 == be_r16);
-        CHECK_TRUE(r32 == be_r32);
-        CHECK_TRUE(r64 == be_r64);
-
-        std::cout << "ITR : " << i << " complete " << std::endl;
+        CHECK_FALSE(r16 == le_r16);
+        CHECK_FALSE(r32 == le_r32);
+        CHECK_FALSE(r64 == le_r64);
+#endif
     }
 }
-
-#endif
 
