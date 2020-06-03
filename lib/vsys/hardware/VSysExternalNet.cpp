@@ -8,10 +8,11 @@
 extern "C"
 {
     #include "sockets.h"
-    #include "util.h"
     #include <assert.h>
     #include <stdlib.h>
 }
+
+#include "util.hpp"
 
 namespace NABLA
 {

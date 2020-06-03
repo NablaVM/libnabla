@@ -3,9 +3,13 @@
 
 #include <stdint.h>
 
-#ifdef __cplusplus  
-extern "C" { 
-#endif 
+//! \brief A deconstructed double
+struct DoubleDeconstructed
+{
+    bool sign;
+    uint64_t exponent;
+    uint64_t mantissa;
+};
 
 //! \brief Extract a byte from a uint64_t
 //! \param data The data do get the byte from
@@ -37,8 +41,15 @@ uint64_t util_convert_double_to_uint64(double val);
 //! \note Uses a precision of 0.00001
 uint8_t util_check_double_equal(double lhs, double rhs);
 
-#ifdef __cplusplus 
-} 
-#endif 
+//! \brief Deconstruct a double into its base components
+//! \param val The double to deconstruct
+//! \returns Struct containing double components
+DoubleDeconstructed util_deconstruct_double(double val);
+
+//! \brief Construct a double from deconstructed components
+//! \param dd The deconstructed double
+//! \param okay [out] Tells us if constriuction works
+//! \returns Constructed double
+double util_construct_double(struct DoubleDeconstructed dd, bool &okay);
 
 #endif

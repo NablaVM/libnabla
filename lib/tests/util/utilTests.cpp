@@ -1,9 +1,5 @@
 
-extern "C"
-{
-    #include "util.h"
-}
-
+#include "util.hpp"
 #include <iostream>
 #include <random>
 #include "CppUTest/TestHarness.h"

@@ -3,7 +3,7 @@
 #include "VSysInstructions.hpp"
 #include <random>
 
-#include "ieee754.h"
+#include "util.hpp"
 
 #include "CppUTest/TestHarness.h"
 
@@ -158,14 +158,7 @@ TEST(ConstantTests, doublePrecisionFp)
 
         std::vector<uint8_t> expected;
 
-        ieee754_double ied;
-
-        ied.d = dval;
-
-        uint64_t packed = (uint64_t)ied.ieee.negative  << 63| 
-                          (uint64_t)ied.ieee.exponent  << 52|
-                          (uint64_t)ied.ieee.mantissa0 << 32|
-                          (uint64_t)ied.ieee.mantissa1 << 0;
+        uint64_t packed = util_convert_double_to_uint64(dval);
 
         expected.push_back( NABLA::VSYS::CONST_DBL      );
         expected.push_back( (packed & 0xFF00000000000000) >> 56 );
