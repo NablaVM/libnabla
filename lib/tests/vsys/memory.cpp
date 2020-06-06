@@ -238,5 +238,83 @@ TEST(MemoryTests, mixed)
         CHECK_FALSE(memunit.push_32(8));
         CHECK_FALSE(memunit.push_64(8));
     }
+}
 
+// ---------------------------------------------------------------
+// 
+// ---------------------------------------------------------------
+
+TEST(MemoryTests, explicit_tests)
+{
+    // 64
+    {
+        NABLA::VSYS::Memory<8> memunit;
+
+        CHECK_TRUE(memunit.push_64(0xFFFFFFFFFFFFFFFF));
+
+        uint64_t data = 0;
+        CHECK_TRUE(memunit.get_64(0, data));
+
+        CHECK_EQUAL(0xFFFFFFFFFFFFFFFF, data);
+
+        while(memunit.hasData())
+        {
+            uint64_t data = 0;
+            CHECK_TRUE(memunit.pop_64(data));
+        }
+    }
+
+    // 32
+    {
+        NABLA::VSYS::Memory<4> memunit;
+
+        CHECK_TRUE(memunit.push_32(0xFFFFFFFF));
+
+        uint32_t data = 0;
+        CHECK_TRUE(memunit.get_32(0, data));
+
+        CHECK_EQUAL(0xFFFFFFFF, data);
+
+        while(memunit.hasData())
+        {
+            uint32_t data = 0;
+            CHECK_TRUE(memunit.pop_32(data));
+        }
+    }
+
+    // 16
+    {
+        NABLA::VSYS::Memory<2> memunit;
+
+        CHECK_TRUE(memunit.push_16(0xFFFF));
+
+        uint16_t data = 0;
+        CHECK_TRUE(memunit.get_16(0, data));
+
+        CHECK_EQUAL(0xFFFF, data);
+
+        while(memunit.hasData())
+        {
+            uint16_t data = 0;
+            CHECK_TRUE(memunit.pop_16(data));
+        }
+    }
+
+    // 8
+    {
+        NABLA::VSYS::Memory<1> memunit;
+
+        CHECK_TRUE(memunit.push_8(0xFF));
+
+        uint8_t data = 0;
+        CHECK_TRUE(memunit.get_8(0, data));
+
+        CHECK_EQUAL(0xFF, data);
+
+        while(memunit.hasData())
+        {
+            uint8_t data = 0;
+            CHECK_TRUE(memunit.pop_8(data));
+        }
+    }
 }
