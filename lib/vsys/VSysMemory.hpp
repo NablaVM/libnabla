@@ -147,7 +147,7 @@ namespace VSYS
         //! \param[int] idx The index of the data to set
         //! \param[out] data The data set
         //! \returns True if data could be set, False otherwise
-        bool set_16(uint64_t idx, uint8_t data)
+        bool set_16(uint64_t idx, uint16_t data)
         {
             if(idx+1 >= T) { return false; }
 
@@ -200,7 +200,7 @@ namespace VSYS
         //! \param[int] idx The index of the data to set
         //! \param[out] data The data set
         //! \returns True if data could be set, False otherwise
-        bool set_32(uint64_t idx, uint8_t data)
+        bool set_32(uint64_t idx, uint32_t data)
         {
             if(idx+3 >= T) { return false; }
 
@@ -253,7 +253,7 @@ namespace VSYS
         //! \param[int] idx The index of the data to set
         //! \param[out] data The data set
         //! \returns True if data could be set, False otherwise
-        bool set_64(uint64_t idx, uint8_t data)
+        bool set_64(uint64_t idx, uint64_t data)
         {
             if(idx+7 >= T) { return false; }
 

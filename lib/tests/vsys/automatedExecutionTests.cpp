@@ -73,7 +73,7 @@ namespace
             ".init main\n"
             ".int8  small 42\n"
             ".int8  tiny  9\n"
-            ".int64 nice  69\n"
+            ".int64 nice  4609434218613702656\n"
             "<main:\n"
             "  ldb r0 $0(gs)\n"
             "  ldw r1 $2(gs)\n"
@@ -199,12 +199,12 @@ namespace
                 {TestInstructs::STEP,      1,   0, 0},
                 {TestInstructs::CHECK_REG, 0,  42, 0},
                 {TestInstructs::STEP,      1,   0, 0},
-                {TestInstructs::CHECK_REG, 1,  69, 0},
+                {TestInstructs::CHECK_REG, 1,  4609434218613702656, 0},
                 {TestInstructs::STEP,      3,   0, 0},
                 {TestInstructs::STEP,      1,   0, 0},
                 {TestInstructs::CHECK_REG, 0,  42, 0},
                 {TestInstructs::STEP,      1,   0, 0},
-                {TestInstructs::CHECK_REG, 1,  69, 0}
+                {TestInstructs::CHECK_REG, 1,  4609434218613702656, 0}
             }
         },
 
