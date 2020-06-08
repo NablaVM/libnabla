@@ -687,7 +687,11 @@ namespace VSYS
                     std::cout << "STB : LOCAL STACK : VAL : " << (int)val << " | Dest : " << destAddress << std::endl;
 #endif
                     }
-                    assert(okay);
+                    if(!okay)
+                    {
+                        std::cerr << "STB Error : DEST [" << destAddress << "] VAL [" << (int)val  << "]" << std::endl; 
+                        return ExecutionReturns::EXECUTION_ERROR;
+                    }
                     break;
                 } 
                 case INS_STW  :
@@ -738,7 +742,11 @@ namespace VSYS
                     std::cout << "STW : LOCAL STACK : VAL : " << val << " | Dest : " << destAddress << std::endl;
 #endif
                     }
-                    assert(okay);
+                    if(!okay)
+                    {
+                        std::cerr << "STW Error : DEST [" << destAddress << "] VAL [" << val << "]" << std::endl; 
+                        return ExecutionReturns::EXECUTION_ERROR;
+                    }
                     break;
                 }        
                 case INS_PUSH  :
@@ -765,7 +773,11 @@ namespace VSYS
                     std::cout << "PUSH : LOCAL STACK : VAL : " << (int)(this->registers[sourceReg] & 0x00000000000000FF) << std::endl;
 #endif
                     }
-                    assert(okay);
+                    if(!okay)
+                    {
+                        std::cerr << "PUSH Error " << std::endl; 
+                        return ExecutionReturns::EXECUTION_ERROR;
+                    }
                     break;
                 }  
                 case INS_PUSHW :
@@ -792,7 +804,11 @@ namespace VSYS
                     std::cout << "PUSHW : LOCAL STACK : VAL : " << this->registers[sourceReg] << std::endl;
 #endif
                     }
-                    assert(okay);
+                    if(!okay)
+                    {
+                        std::cerr << "PUSHW Error " << std::endl; 
+                        return ExecutionReturns::EXECUTION_ERROR;
+                    }
                     break;
                 }      
                 case INS_POP  :
@@ -820,8 +836,11 @@ namespace VSYS
                     std::cout << "POP : LOCAL STACK : VAL : " << (int)val << " | Dest : " << (int)destReg << std::endl;
 #endif
                     }
-                    
-                    assert(okay);
+                    if(!okay)
+                    {
+                        std::cerr << "POP Error " << std::endl; 
+                        return ExecutionReturns::EXECUTION_ERROR;
+                    }
                     this->registers[destReg] = val;
                     break;
                 }    
@@ -851,7 +870,11 @@ namespace VSYS
 #endif
                     }
                     
-                    assert(okay);
+                    if(!okay)
+                    {
+                        std::cerr << "POPW Error " << std::endl; 
+                        return ExecutionReturns::EXECUTION_ERROR;
+                    }
                     this->registers[destReg] = val;
                     break;
                 }          

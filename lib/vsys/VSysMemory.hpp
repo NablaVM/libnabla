@@ -96,7 +96,7 @@ namespace VSYS
         //! \returns True if data could be set, False otherwise
         bool set_8(uint64_t idx, uint8_t data)
         {
-            if(idx >= T) { return false; }
+            if(idx >= T || idx > data_back) { return false; }
 
             put_n(idx, data, 8);
 
@@ -149,7 +149,7 @@ namespace VSYS
         //! \returns True if data could be set, False otherwise
         bool set_16(uint64_t idx, uint16_t data)
         {
-            if(idx+1 >= T) { return false; }
+            if(idx+1 >= T || idx > data_back) { return false; }
 
             put_n(idx, data, 16);
 
@@ -161,7 +161,7 @@ namespace VSYS
         //! \returns True if data could be pushed, False otherwise
         bool push_32(uint32_t data)
         {
-            if(data_back+3 >= T) {  return false; }
+            if(data_back+3 >= T ) {  return false; }
 
             put_n(data_back, data, 32);
 
@@ -202,7 +202,7 @@ namespace VSYS
         //! \returns True if data could be set, False otherwise
         bool set_32(uint64_t idx, uint32_t data)
         {
-            if(idx+3 >= T) { return false; }
+            if(idx+3 >= T || idx > data_back) { return false; }
 
             put_n(idx, data, 32);
 
@@ -214,7 +214,7 @@ namespace VSYS
         //! \returns True if data could be pushed, False otherwise
         bool push_64(uint64_t data)
         {
-            if(data_back+7 >= T) {  return false; }
+            if(data_back+7 >= T ) {  return false; }
 
             put_n(data_back, data, 64);
 
@@ -255,7 +255,7 @@ namespace VSYS
         //! \returns True if data could be set, False otherwise
         bool set_64(uint64_t idx, uint64_t data)
         {
-            if(idx+7 >= T) { return false; }
+            if(idx+7 >= T || idx > data_back) { return false; }
 
             put_n(idx, data, 64);
 
