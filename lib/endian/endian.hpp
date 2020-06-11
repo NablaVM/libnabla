@@ -205,6 +205,6 @@ namespace ENDIAN
 		return le64toh(val);
 #endif
 	}
-	#endif
 
 }
+#endif
