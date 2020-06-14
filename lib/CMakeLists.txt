@@ -39,6 +39,7 @@ include_directories(${CMAKE_SOURCE_DIR}/sockets)
 include_directories(${CMAKE_SOURCE_DIR}/util)
 include_directories(${CMAKE_SOURCE_DIR}/json)
 include_directories(${CMAKE_SOURCE_DIR}/projectfs)
+include_directories(${CMAKE_SOURCE_DIR}/termcolor)
 include_directories(${CMAKE_SOURCE_DIR}/vsys)
 include_directories(${CMAKE_SOURCE_DIR}/vsys/hardware)
 
@@ -57,6 +58,7 @@ set(HEADERS
     ${CMAKE_SOURCE_DIR}/projectfs/projectfs.hpp
     ${CMAKE_SOURCE_DIR}/projectfs/projecttype.hpp
     ${CMAKE_SOURCE_DIR}/projectfs/projectstructure.hpp
+    ${CMAKE_SOURCE_DIR}/termcolor/termcolor.hpp
     ${CMAKE_SOURCE_DIR}/vsys/VSysInstructions.hpp
     ${CMAKE_SOURCE_DIR}/vsys/VSysExecutionContext.hpp
     ${CMAKE_SOURCE_DIR}/vsys/VSysExecutionReturns.hpp
