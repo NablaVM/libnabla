@@ -1087,7 +1087,7 @@ namespace VSYS
             {
 
 #ifdef NABLA_VIRTUAL_MACHINE_DEBUG_OUTPUT
-                std::cerr << "Invalid device id in register 10" << std::endl;
+                std::cerr << "Invalid device id in register 10 : " << (int)device_id << std::endl;
 #endif
                 return false;
             }
