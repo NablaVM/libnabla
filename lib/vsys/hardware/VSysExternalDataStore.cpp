@@ -15,6 +15,7 @@ namespace EXTERNAL
     constexpr int NABLA_DS_DEVICE_COPY      =  5;
     constexpr int NABLA_DS_DEVICE_STORE     = 10;
     constexpr int NABLA_DS_DEVICE_LOAD      = 20;
+    constexpr int NABLA_DS_DEVICE_SIZE      = 30;
     constexpr int NABLA_DS_DEVICE_RESET     = 50;
 
 
@@ -433,9 +434,37 @@ namespace EXTERNAL
             case NABLA_DS_DEVICE_RESET:
             {
 #ifdef NABLA_VIRTUAL_MACHINE_DEBUG_OUTPUT
-                        std::cout << "NABLA_DS_DEVICE_RESET" << std::endl;
+                std::cout << "NABLA_DS_DEVICE_RESET" << std::endl;
 #endif
                 clear_memory();
+                break;
+            }
+            // Size
+            //
+            case NABLA_DS_DEVICE_SIZE:
+            {
+#ifdef NABLA_VIRTUAL_MACHINE_DEBUG_OUTPUT
+                std::cout << "NABLA_DS_DEVICE_SIZE" << std::endl;
+#endif
+
+                uint64_t address_to = registers[11];
+                auto ds_from = data_store.find(address_to);
+
+                if(ds_from == data_store.end())
+                {
+#ifdef NABLA_VIRTUAL_MACHINE_DEBUG_OUTPUT
+                    std::cout << "\tFAIL : Unable to locate ID : " << address_to << std::endl;
+#endif
+                    registers[10] = 0;
+                    registers[11] = 1;
+                    return;
+                }  
+
+                registers[11] = 0;
+                registers[12] = ds_from->second->size();
+#ifdef NABLA_VIRTUAL_MACHINE_DEBUG_OUTPUT
+                std::cout << "\tSUCCESS : Size of " << address_to << " is : " << registers[12] << std::endl;
+#endif
                 break;
             }
             default:
