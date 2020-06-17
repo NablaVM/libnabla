@@ -14,11 +14,15 @@ namespace VSYS
 {
 namespace EXTERNAL
 {
+    //! \brief An external 'device' that adds Data Storage functionality
     class DataStore : public ExternalIf 
     {
     public:
 
+        //! \brief Create the external device
         DataStore();
+
+        //! \brief Destroy the external device
         ~DataStore();
 
         // From ExternalIf
@@ -31,6 +35,8 @@ namespace EXTERNAL
         uint64_t get_address();
 
         void free_address(uint64_t address);
+
+        void clear_memory();
 
         uint64_t alloc_bytes(uint32_t bytes, bool & okay);
 

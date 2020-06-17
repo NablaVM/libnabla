@@ -15,6 +15,7 @@ namespace EXTERNAL
     constexpr int NABLA_DS_DEVICE_COPY      =  5;
     constexpr int NABLA_DS_DEVICE_STORE     = 10;
     constexpr int NABLA_DS_DEVICE_LOAD      = 20;
+    constexpr int NABLA_DS_DEVICE_RESET     = 50;
 
 
     constexpr int NABLA_DS_DEVICE_LOAD_TYPE_SPECIFIC  = 0;
@@ -90,6 +91,35 @@ namespace EXTERNAL
 
         // Store the address for later use
         freed_address_pool.push(address);
+    }
+
+    // ---------------------------------------------------------------
+    // 
+    // ---------------------------------------------------------------
+
+    void DataStore::clear_memory()
+    {
+        // Delete any existing items
+        for(auto & item : data_store)
+        {
+            if(item.second != nullptr)
+            {
+                item.second->clear();
+                delete item.second;
+            }
+        }
+
+        // Clear map
+        data_store.clear();
+
+        // Clear pool stack
+        while(!freed_address_pool.empty())
+        {
+            freed_address_pool.pop();
+        }
+
+        // Reset address counter
+        address_counter = 0;
     }
 
     // ---------------------------------------------------------------
@@ -392,9 +422,20 @@ namespace EXTERNAL
                     }
                 }
 
+
                 // Success
                 registers[11] = 0;
                 registers[12] = 0;
+                break;
+            }
+            // Reset 
+            //
+            case NABLA_DS_DEVICE_RESET:
+            {
+#ifdef NABLA_VIRTUAL_MACHINE_DEBUG_OUTPUT
+                        std::cout << "NABLA_DS_DEVICE_RESET" << std::endl;
+#endif
+                clear_memory();
                 break;
             }
             default:
