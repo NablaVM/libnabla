@@ -10,7 +10,8 @@ namespace VSYS
     // ----------------------------------------------------------------
     
     Machine::Machine() : running(false), inErrorState(false), entryAddress(0),
-                         external_device_IO(nullptr), external_device_Net(nullptr), external_device_Host(nullptr)
+                         external_device_IO(nullptr),   external_device_Net(nullptr), 
+                         external_device_Host(nullptr), external_device_DataStore(nullptr)
     {
 
     }
@@ -24,9 +25,10 @@ namespace VSYS
         executionContexts.clear();
         externalDeviceMap.clear();
 
-        delete external_device_IO;
-        delete external_device_Net;
-        delete external_device_Host;        
+        if(external_device_IO)        { delete external_device_IO;        }
+        if(external_device_Net)       { delete external_device_Net;       }
+        if(external_device_Host)      { delete external_device_Host;      }
+        if(external_device_DataStore) { delete external_device_DataStore; }
     }
 
     // ----------------------------------------------------------------
@@ -53,7 +55,8 @@ namespace VSYS
     bool Machine::addStandardExternalDevices()
     {
         // If any of these are defined, then we've already added them
-        if(external_device_IO != nullptr || external_device_Net != nullptr || external_device_Host != nullptr)
+        if(external_device_IO  != nullptr || external_device_Net != nullptr || 
+          external_device_Host != nullptr || external_device_DataStore != nullptr)
         {
             return false;
         }
@@ -61,6 +64,7 @@ namespace VSYS
         external_device_IO   = new EXTERNAL::IO  ();
         external_device_Net  = new EXTERNAL::Net ();
         external_device_Host = new EXTERNAL::Host();
+        external_device_DataStore = new EXTERNAL::DataStore();
 
         // ADD IO
         if(! attachExternal(NABLA_VSYS_SETTINGS_EXTERNALS_ADDRESS_IO,   *external_device_IO) ) { return false; }
@@ -70,6 +74,9 @@ namespace VSYS
 
         // Add Host
         if(! attachExternal(NABLA_VSYS_SETTINGS_EXTERNALS_ADDRESS_HOST, *external_device_Host) ) { return false; }
+
+        // Add Data Store
+        if(! attachExternal(NABLA_VSYS_SETTINGS_EXTERNALS_ADDRESS_DS,   *external_device_DataStore) ) { return false; }
 
         return true;
     }

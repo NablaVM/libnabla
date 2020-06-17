@@ -70,6 +70,7 @@ set(HEADERS
     ${CMAKE_SOURCE_DIR}/vsys/hardware/VSysExternalIO.hpp
     ${CMAKE_SOURCE_DIR}/vsys/hardware/VSysExternalNet.hpp
     ${CMAKE_SOURCE_DIR}/vsys/hardware/VSysExternalHost.hpp
+    ${CMAKE_SOURCE_DIR}/vsys/hardware/VSysExternalDataStore.hpp
 )
 
 set(SOURCES
@@ -86,6 +87,7 @@ set(SOURCES
     ${CMAKE_SOURCE_DIR}/vsys/hardware/VSysExternalIO.cpp
     ${CMAKE_SOURCE_DIR}/vsys/hardware/VSysExternalNet.cpp
     ${CMAKE_SOURCE_DIR}/vsys/hardware/VSysExternalHost.cpp
+    ${CMAKE_SOURCE_DIR}/vsys/hardware/VSysExternalDataStore.cpp
 )
 
 #-------------------------------------------------

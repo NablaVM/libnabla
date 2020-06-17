@@ -12,6 +12,7 @@
 #include "VSysExternalIO.hpp"
 #include "VSysExternalNet.hpp"
 #include "VSysExternalHost.hpp"
+#include "VSysExternalDataStore.hpp"
 
 #include <stdint.h>
 #include <vector>
@@ -118,6 +119,7 @@ namespace VSYS
         EXTERNAL::IO   * external_device_IO;
         EXTERNAL::Net  * external_device_Net;
         EXTERNAL::Host * external_device_Host;
+        EXTERNAL::DataStore * external_device_DataStore;
     };
 } 
 }
