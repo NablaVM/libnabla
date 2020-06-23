@@ -77,6 +77,10 @@ namespace EXTERNAL
         if(ds_item == data_store.end())
         {
             // Item doesn't exist
+
+#ifdef NABLA_VIRTUAL_MACHINE_DEBUG_OUTPUT
+            std::cout << "DS::FREE_ADDRESS: " << address << " | DIDNT EXIST" << std::endl;
+#endif
             return;
         }
 
@@ -239,6 +243,7 @@ namespace EXTERNAL
             {
 #ifdef NABLA_VIRTUAL_MACHINE_DEBUG_OUTPUT
                 std::cout << "NABLA_DS_DEVICE_FREE" << std::endl;
+                std::cout << "\tADDRESS: " << registers[11] << std::endl;
 #endif
                 free_address(registers[11]);
                 registers[11] = 0;
@@ -343,6 +348,7 @@ namespace EXTERNAL
                 {
 #ifdef NABLA_VIRTUAL_MACHINE_DEBUG_OUTPUT
                     std::cout << "\tFAIL: Address not found" << std::endl;
+                    std::cout << "\tADDR: " << address_to    << std::endl;
 #endif
                     registers[10] = 0;
                     registers[11] = 1;
