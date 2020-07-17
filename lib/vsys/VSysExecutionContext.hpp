@@ -55,6 +55,9 @@ namespace VSYS
             uint64_t instruction_pointer;
             std::vector<uint64_t> * instructions;
             Memory<NABLA_VSYS_SETTINGS_LOCAL_MEMORY_BYTES> function_memory;
+
+            // Jump stack for the current function context
+            std::stack<uint64_t> jumpStack;
         };
 
         // Functions wrapped with context info for execution within the current

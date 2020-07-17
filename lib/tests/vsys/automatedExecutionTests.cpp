@@ -167,6 +167,27 @@ namespace
             "    call main_call\n"
             ">\n";
 
+    const std::string AT_JMP_RET =
+            ".file \"AT_JMP_RET\"\n"
+            ".init main\n"
+            "<main:\n"
+            "    jmp skip\n"
+            "some_label:\n"
+            "    @jmp down\n"
+            "    @ret\n"
+            "skip:\n"
+            "    @jmp some_label\n"
+            "    mov r0 $331\n"
+            "    mov r0 $332\n"
+            "    mov r0 $333\n"
+            "    jmp complete\n"
+            "down:\n"
+            "    mov r0 $222\n"
+            "    @ret\n"
+            "complete:\n"
+            "    mov r0 $555\n"
+            ">\n";
+
     struct TestCase
     {
         std::string data;
@@ -310,6 +331,24 @@ namespace
                 {TestInstructs::STEP,      1, 0, 0},
                 {TestInstructs::CHECK_REG, 0, 3, 1},
                 {TestInstructs::CHECK_REG, 0, 10, 0}
+            } 
+        },
+
+        // AT JMP/RET TESTS 
+        TestCase 
+        { 
+            AT_JMP_RET, "@jmp / @ret Tests", 
+            { 
+                {TestInstructs::STEP,      5,  0, 0},
+                {TestInstructs::CHECK_REG, 0,  222, 0},
+                {TestInstructs::STEP,      2,  0, 0},
+                {TestInstructs::CHECK_REG, 0,  331, 0},
+                {TestInstructs::STEP,      1,  0, 0},
+                {TestInstructs::CHECK_REG, 0,  332, 0},
+                {TestInstructs::STEP,      1,  0, 0},
+                {TestInstructs::CHECK_REG, 0,  333, 0},
+                {TestInstructs::STEP,      2,  0, 0},
+                {TestInstructs::CHECK_REG, 0,  555, 0}
             } 
         },
     };

@@ -189,6 +189,10 @@ namespace NABLA
         //! \param location  Location (adddress) to jump to
         Instruction createJumpInstruction(uint32_t location);
 
+        //! \brief Create a @jump instruction
+        //! \param location  Location (adddress) to jump to
+        Instruction createAtJumpInstruction(uint32_t location);
+
         //! \brief Create a move instruction
         //! \param setup Flag for what argument 2 represents (reg v.s num)
         //! \param reg1  Register 1 (dest)
@@ -245,6 +249,9 @@ namespace NABLA
 
         //! \brief Create return instruction
         Instruction createReturnInstruction();
+
+        //! \brief Create atreturn instruction
+        Instruction createAtReturnInstruction();
 
         //! \brief Create a call instruction
         //! \param funcFrom Address of function that is calling

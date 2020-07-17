@@ -912,8 +912,30 @@ namespace VSYS
                     this->contextFunctions[
                         this->currentInstructionBlock
                         ].instruction_pointer = destAddress; 
+
+#ifdef NABLA_VIRTUAL_MACHINE_DEBUG_OUTPUT
+                    std::cout << "JUMP : " << destAddress << std::endl;
+#endif
                     continue;
-                }          
+                }       
+                case INS_AT_JUMP :
+                {
+                    uint64_t destAddress = (uint64_t)UTIL::extract_two_bytes(ins, 6) << 16| 
+                                        (uint64_t)UTIL::extract_two_bytes(ins, 4);
+
+                    uint64_t current_pointer = this->contextFunctions[this->currentInstructionBlock].instruction_pointer;
+
+                    this->contextFunctions[
+                        this->currentInstructionBlock
+                        ].instruction_pointer = destAddress; 
+
+                    this->contextFunctions[this->currentInstructionBlock].jumpStack.push(current_pointer);
+
+#ifdef NABLA_VIRTUAL_MACHINE_DEBUG_OUTPUT
+                    std::cout << "@JUMP : " << destAddress << std::endl;
+#endif
+                    continue;
+                }             
                 case INS_YIELD:
                 {
                     if(this->callStack.empty())
@@ -1007,7 +1029,26 @@ namespace VSYS
                         return ExecutionReturns::ALL_EXECUTION_COMPLETE;
                     }
                     break; // Yes
-                }          
+                }   
+                case INS_AT_RET  :
+                {      
+#ifdef NABLA_VIRTUAL_MACHINE_DEBUG_OUTPUT
+                    std::cout << "INS_AT_RET" << std::endl;
+#endif
+                    if(this->contextFunctions[this->currentInstructionBlock].jumpStack.empty())
+                    {
+                        std::cerr << "Jump stack empty when attempting to execute INS_AT_RET" << std::endl;
+                        return ExecutionReturns::EXECUTION_ERROR;
+                    }
+
+                    uint64_t dest = this->contextFunctions[this->currentInstructionBlock].jumpStack.top(); 
+                    this->contextFunctions[this->currentInstructionBlock].jumpStack.pop();
+
+                    this->contextFunctions[
+                        this->currentInstructionBlock
+                        ].instruction_pointer = dest; 
+                    break; // Yes
+                }                
                 case INS_EXIT :
                 {
 #ifdef NABLA_VIRTUAL_MACHINE_DEBUG_OUTPUT
@@ -1139,6 +1180,11 @@ namespace VSYS
 
     // ----------------------------------------------------------------
     //
+    //  Development Note: 
+    //      If we threaded things, or somehow parallelized this, things would be much faster (potentially)
+    //      during returns. There could be a lot of information to pop from stacks that will hinder
+    //      execution time
+    //
     // ----------------------------------------------------------------
 
     bool ExecutionContext::attempt_return()
@@ -1162,6 +1208,12 @@ namespace VSYS
         {
             uint8_t t;
             this->contextFunctions[currentInstructionBlock].function_memory.pop_8(t);
+        }
+
+        // Clear out function jump stack
+        while( !this->contextFunctions[this->currentInstructionBlock].jumpStack.empty() )
+        {
+            this->contextFunctions[this->currentInstructionBlock].jumpStack.pop();
         }
 
         this->contextFunctions[currentInstructionBlock].instruction_pointer = 0;
