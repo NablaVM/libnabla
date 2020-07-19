@@ -71,6 +71,8 @@
         ldw             X                   X                  X
         stw             X                   X                  X
         pcall           X                   X                  X
+        @jmp            X                   X                  X
+        @ret            X                   X                  X
         label           X                   NA                 NA
 
 */
@@ -131,8 +133,10 @@ bool instruction_beqd();
 bool instruction_bned();
 
 bool instruction_jmp();
+bool instruction_at_jmp();
 bool instruction_call();
 bool instruction_return();
+bool instruction_at_return();
 
 bool instruction_exit();
 
@@ -273,6 +277,9 @@ void populate_parser_map()
         MatchCall{ std::regex("^call$")      , instruction_call      },
         MatchCall{ std::regex("^pcall$")     , instruction_pcall     },
         MatchCall{ std::regex("^ret$")       , instruction_return    },
+        
+        MatchCall{ std::regex("^@jmp$")      , instruction_at_jmp    },
+        MatchCall{ std::regex("^@ret$")      , instruction_at_return },
 
         MatchCall{ std::regex("^yield$")     , instruction_yield     },
 
@@ -466,26 +473,17 @@ bool finalizePayload(std::vector<uint8_t> & finalBytes)
 //
 // -----------------------------------------------
 
-inline bool parseFile(std::string file)
+inline bool parseVector(std::vector<std::string> asmVector)
 {
-    std::ifstream ifs(file);
-
-    if(!ifs.is_open())
-    {
-        std::cout << "Unable to open file : " <<file << std::endl;
-        return false;
-    }
-
     /*
         Load and pre-process
     */
-
     bool inFunc = false;                        // Ensure we are inside a function before we determine a line was an instruction
     uint64_t preprocessInsCount = 0;            // Count the instructions in the current function to determine label addresses
     uint32_t preprocessFunctionCounter    = 0;  // Count the number of functions so we can determine function address
     std::string cFuncName;                      // The function that we are currently processing
 
-    while (std::getline(ifs, currentLine))
+    for(auto & currentLine : asmVector)
     {
         // Ensure we ignore comments
         currentLine = currentLine.substr(0, currentLine.find(";", 0));
@@ -577,8 +575,6 @@ inline bool parseFile(std::string file)
         }
     }
 
-    ifs.close();
-
     for(uint64_t cline = 0; cline < rawFile.size(); cline++)
     {
         currentLine = rawFile[cline];
@@ -619,10 +615,35 @@ inline bool parseFile(std::string file)
 //
 // -----------------------------------------------
 
-bool ParseAsm(std::string asmFile, std::vector<uint8_t> &bytes, bool verbose)
+inline bool parseFile(std::string file)
+{
+    std::ifstream ifs(file);
+
+    if(!ifs.is_open())
+    {
+        std::cout << "Unable to open file : " <<file << std::endl;
+        return false;
+    }
+
+    std::string currentLine;
+    std::vector<std::string> asmVector;
+    while (std::getline(ifs, currentLine))
+    {
+        asmVector.push_back(currentLine);
+    }
+    ifs.close();
+
+    return parseVector(asmVector);
+}
+
+// -----------------------------------------------
+//
+// -----------------------------------------------
+
+void initialize_assembler(bool verbosity)
 {
     // Set verbosity
-    isParserVerbose = verbose;
+    isParserVerbose = verbosity;
 
     populate_parser_map();
 
@@ -634,10 +655,37 @@ bool ParseAsm(std::string asmFile, std::vector<uint8_t> &bytes, bool verbose)
 
     currentFunction.name = "UNDEFINED";
     isSystemBuildingFunction = false;
+}
+
+// -----------------------------------------------
+//
+// -----------------------------------------------
+
+bool ParseAsm(std::string asmFile, std::vector<uint8_t> &bytes, bool verbose)
+{
+    initialize_assembler(verbose);
 
     // Parse the first file - Include directives will drive the parsing
     // of required files
     if(!parseFile(asmFile))
+    {
+        return false;
+    }
+
+    // Finalize the payload, and set the bytes so the caller has something they
+    // can play with
+    return finalizePayload(bytes);
+}
+
+// -----------------------------------------------
+//
+// -----------------------------------------------
+
+bool ParseAsmVector(std::vector<std::string> asmVector, std::vector<uint8_t> &bytes, bool verbose)
+{
+    initialize_assembler(verbose);
+
+    if(!parseVector(asmVector))
     {
         return false;
     }
@@ -1885,6 +1933,46 @@ bool instruction_jmp()
         );
     return true;
 }
+// -----------------------------------------------
+//
+// -----------------------------------------------
+
+bool instruction_at_jmp()
+{
+    if(!isSystemBuildingFunction)
+    {
+        std::cerr << "All Instructions must exist within a function" << std::endl;
+        return false;
+    }
+
+    if(!(currentPieces.size() == 2))
+    {
+        std::cerr << "Invalid @jump instruction : " << currentLine << std::endl;
+        return false;
+    }
+    
+    // Same as branch.. sue me.
+    if(!isBranchableLabel(currentPieces[1]))
+    {
+        std::cerr << "@Jump argument 1 must be a label, got : " << currentPieces[1] <<  std::endl;
+        return false;
+    }
+
+    if(!isLabelInCurrentFunction(currentPieces[1]))
+    {
+        std::cerr << "@Jumps must jump to existing labels. - We hope to extend this functionality later" << std::endl;
+        return false;
+    }
+
+    if(isParserVerbose) { std::cout << "Creating jmp instruction to : " << currentPieces[1] << std::endl; }
+
+    uint32_t labelValue = preProcessedLabels[currentFunction.name][currentPieces[1]];
+
+    addBytegenInstructionToCurrentFunction(
+        nablaByteGen.createAtJumpInstruction(labelValue)
+        );
+    return true;
+}
 
 // -----------------------------------------------
 //
@@ -2002,6 +2090,31 @@ bool instruction_return()
 //
 // -----------------------------------------------
 
+bool instruction_at_return()
+{
+    if(!isSystemBuildingFunction)
+    {
+        std::cerr << "All Instructions must exist within a function" << std::endl;
+        return false;
+    }
+    
+    if(currentPieces.size() != 1)
+    {
+        std::cerr << "Invalid @return instruction : " << currentLine << std::endl;
+        return false;
+    }
+
+    addBytegenInstructionToCurrentFunction(
+        nablaByteGen.createAtReturnInstruction()
+        );
+
+    return true;
+}
+
+// -----------------------------------------------
+//
+// -----------------------------------------------
+
 bool instruction_exit()
 {
     if(!isSystemBuildingFunction)
@@ -2065,21 +2178,6 @@ bool instruction_directive()
         std::cerr << "Unknown potential directive : " << currentLine << std::endl;
         return false;
     }
-
-    /*
-        DEVELOPMENT_NOTE
-    
-            Consider adding the following :
-
-                .float 
-
-                .prototype
-
-            Right now constant strings are limited to 255 chars long. Which is like.. fine.. but
-            we could totally do something like .long_string and set a larger size indication field.
-
-            Of course, any of these additions would need to be written-out in the instruction manual first    
-    */
 
     // ----------------------------------------------------------------------
     //  Set entry point

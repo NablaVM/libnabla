@@ -43,6 +43,8 @@ namespace VSYS
             InstructionBlock ib;
             ib.instruction_pointer = 0;
             ib.instructions = &functions[i];
+            ib.recursion_counter = 0;
+            ib.recursion_flag = false;
             contextFunctions.push_back(
                 ib
             );
@@ -912,8 +914,30 @@ namespace VSYS
                     this->contextFunctions[
                         this->currentInstructionBlock
                         ].instruction_pointer = destAddress; 
+
+#ifdef NABLA_VIRTUAL_MACHINE_DEBUG_OUTPUT
+                    std::cout << "JUMP : " << destAddress << std::endl;
+#endif
                     continue;
-                }          
+                }       
+                case INS_AT_JUMP :
+                {
+                    uint64_t destAddress = (uint64_t)UTIL::extract_two_bytes(ins, 6) << 16| 
+                                        (uint64_t)UTIL::extract_two_bytes(ins, 4);
+
+                    uint64_t current_pointer = this->contextFunctions[this->currentInstructionBlock].instruction_pointer;
+
+                    this->contextFunctions[
+                        this->currentInstructionBlock
+                        ].instruction_pointer = destAddress; 
+
+                    this->contextFunctions[this->currentInstructionBlock].jumpStack.push(current_pointer);
+
+#ifdef NABLA_VIRTUAL_MACHINE_DEBUG_OUTPUT
+                    std::cout << "@JUMP : " << destAddress << std::endl;
+#endif
+                    continue;
+                }             
                 case INS_YIELD:
                 {
                     if(this->callStack.empty())
@@ -973,6 +997,43 @@ namespace VSYS
                     uint64_t destAddress =  (uint64_t)UTIL::extract_two_bytes(ins, 6) << 16| 
                                             (uint64_t)UTIL::extract_two_bytes(ins, 4);
 
+                    // Detect recursion
+                    if(currentInstructionBlock == destAddress)
+                    {
+#ifdef NABLA_VIRTUAL_MACHINE_DEBUG_OUTPUT
+                    std::cout << "INS_CALL : Recursion detected : " << destAddress << std::endl;
+#endif
+                        this->contextFunctions[currentInstructionBlock].recursion_flag = true;
+                        this->contextFunctions[currentInstructionBlock].recursion_counter++;
+
+                        // Inc ip for return
+                        this->contextFunctions[currentInstructionBlock].instruction_pointer++;
+
+                        // Save instruction pointer
+                        this->contextFunctions[currentInstructionBlock].instruction_pointer_history.push(
+                            this->contextFunctions[currentInstructionBlock].instruction_pointer
+                        );
+
+                        // Save block memory
+                        this->contextFunctions[currentInstructionBlock].function_memory_history.push(
+                            this->contextFunctions[currentInstructionBlock].function_memory
+                        );
+
+                        // Save jump stack
+                        this->contextFunctions[currentInstructionBlock].jump_history.push(
+                            this->contextFunctions[currentInstructionBlock].jumpStack
+                        );
+
+                        // Reset instruction pointer for call into self
+                        this->contextFunctions[currentInstructionBlock].instruction_pointer = 0;
+
+                        // Reset function memory
+                        this->contextFunctions[currentInstructionBlock].function_memory.reset();
+
+                        // Clear jump stack
+                        this->contextFunctions[currentInstructionBlock].jumpStack = {};
+                    }
+
                     currentInstructionBlock = destAddress;
 
                     this->switchingFunction = true;
@@ -987,6 +1048,12 @@ namespace VSYS
                     // P Call
                     uint64_t destAddress =  (uint64_t)UTIL::extract_two_bytes(ins, 6) << 16| 
                                             (uint64_t)UTIL::extract_two_bytes(ins, 4);
+
+                    if(currentInstructionBlock == destAddress)
+                    {
+                        std::cout << "pcall recursion detected; this is not supported" << std::endl;
+                        return ExecutionReturns::EXECUTION_ERROR;
+                    }
 
                     owner.queueNewExecutionContext(destAddress);
                     
@@ -1007,7 +1074,26 @@ namespace VSYS
                         return ExecutionReturns::ALL_EXECUTION_COMPLETE;
                     }
                     break; // Yes
-                }          
+                }   
+                case INS_AT_RET  :
+                {      
+#ifdef NABLA_VIRTUAL_MACHINE_DEBUG_OUTPUT
+                    std::cout << "INS_AT_RET" << std::endl;
+#endif
+                    if(this->contextFunctions[this->currentInstructionBlock].jumpStack.empty())
+                    {
+                        std::cerr << "Jump stack empty when attempting to execute INS_AT_RET" << std::endl;
+                        return ExecutionReturns::EXECUTION_ERROR;
+                    }
+
+                    uint64_t dest = this->contextFunctions[this->currentInstructionBlock].jumpStack.top(); 
+                    this->contextFunctions[this->currentInstructionBlock].jumpStack.pop();
+
+                    this->contextFunctions[
+                        this->currentInstructionBlock
+                        ].instruction_pointer = dest; 
+                    break; // Yes
+                }                
                 case INS_EXIT :
                 {
 #ifdef NABLA_VIRTUAL_MACHINE_DEBUG_OUTPUT
@@ -1139,6 +1225,11 @@ namespace VSYS
 
     // ----------------------------------------------------------------
     //
+    //  Development Note: 
+    //      If we threaded things, or somehow parallelized this, things would be much faster (potentially)
+    //      during returns. There could be a lot of information to pop from stacks that will hinder
+    //      execution time
+    //
     // ----------------------------------------------------------------
 
     bool ExecutionContext::attempt_return()
@@ -1151,25 +1242,82 @@ namespace VSYS
             return false;
         }
 
-        int getRetData = 0;
-
-        uint64_t ret_roi = this->callStack.top(); this->callStack.pop();
-
-        uint64_t func_to = this->callStack.top(); this->callStack.pop();
-
-        // Clear out the function's local call stack
-        while( this->contextFunctions[currentInstructionBlock].function_memory.hasData() )
-        {
-            uint8_t t;
-            this->contextFunctions[currentInstructionBlock].function_memory.pop_8(t);
-        }
-
-        this->contextFunctions[currentInstructionBlock].instruction_pointer = 0;
-
-        this->currentInstructionBlock = func_to;
-        this->contextFunctions[currentInstructionBlock].instruction_pointer = ret_roi;
+        // No matter what, this should be true rn
         this->switchingFunction = true;
 
+        uint64_t ret_roi = this->callStack.top(); this->callStack.pop();
+        uint64_t func_to = this->callStack.top(); this->callStack.pop();
+
+        //  Recursive or not, we need to go to the region of interest
+        //
+
+        //  Detect a recursive return
+        //  
+        if(func_to == currentInstructionBlock)
+        {
+#ifdef NABLA_VIRTUAL_MACHINE_DEBUG_OUTPUT
+            std::cout << "Return from recursive call" << std::endl;
+#endif
+            // Dec the counter
+            this->contextFunctions[currentInstructionBlock].recursion_counter--;
+
+            // Reset the old instruction pointer
+            this->contextFunctions[currentInstructionBlock].instruction_pointer = 
+                this->contextFunctions[currentInstructionBlock].instruction_pointer_history.top();
+
+            // Remove the instruction pointer on top from history
+            this->contextFunctions[currentInstructionBlock].instruction_pointer_history.pop();
+
+            // Reset to the old memory
+            this->contextFunctions[currentInstructionBlock].function_memory = 
+                this->contextFunctions[currentInstructionBlock].function_memory_history.top();
+
+            // Remove the memory on top from history
+            this->contextFunctions[currentInstructionBlock].function_memory_history.pop();
+
+            // Reset to the old jump stack
+            this->contextFunctions[currentInstructionBlock].jumpStack = 
+                this->contextFunctions[currentInstructionBlock].jump_history.top();
+
+            // Pop the old jump stack
+            this->contextFunctions[currentInstructionBlock].jump_history.pop();
+
+            // If we are entering back into origin unset recursion flag
+            if(this->contextFunctions[currentInstructionBlock].recursion_counter <= 0)
+            {
+#ifdef NABLA_VIRTUAL_MACHINE_DEBUG_OUTPUT
+            std::cout << "Re-entering recursive origin" << std::endl;
+#endif
+                this->contextFunctions[currentInstructionBlock].recursion_counter = 0;
+                this->contextFunctions[currentInstructionBlock].recursion_flag = false;
+            }
+
+            //  We are done here
+            //
+            return true;
+        }
+
+        //  If we are exiting the origin function, then we can clear everything
+        //
+        if(this->contextFunctions[currentInstructionBlock].recursion_flag == false)
+        {
+            // Clear out the function's local call stack
+            while( this->contextFunctions[currentInstructionBlock].function_memory.hasData() )
+            {
+                uint8_t t;
+                this->contextFunctions[currentInstructionBlock].function_memory.pop_8(t);
+            }
+
+            // Clear out function jump stack
+            while( !this->contextFunctions[this->currentInstructionBlock].jumpStack.empty() )
+            {
+                this->contextFunctions[this->currentInstructionBlock].jumpStack.pop();
+            }
+
+            this->contextFunctions[currentInstructionBlock].instruction_pointer = 0;
+            this->currentInstructionBlock = func_to;
+            this->contextFunctions[currentInstructionBlock].instruction_pointer = ret_roi;
+        }
         return true;
     }
 }

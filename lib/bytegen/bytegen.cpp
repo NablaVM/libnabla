@@ -413,6 +413,30 @@ namespace NABLA
     }
 
     // ------------------------------------------------------------------------
+    // createAtJumpInstruction
+    // ------------------------------------------------------------------------
+    
+    Bytegen::Instruction Bytegen::createAtJumpInstruction(uint32_t location)
+    {
+        location = ENDIAN::conditional_to_le_32( location );
+
+        Instruction ins;
+
+        ins.bytes[0] = NABLA::VSYS::INS_AT_JUMP;
+        ins.bytes[1] = (location & 0xFF000000) >> 24 ;
+        ins.bytes[2] = (location & 0x00FF0000) >> 16 ;
+        ins.bytes[3] = (location & 0x0000FF00) >> 8  ;
+        ins.bytes[4] = (location & 0x000000FF) >> 0  ;
+        ins.bytes[5] = 0xFF;
+        ins.bytes[6] = 0xFF;
+        ins.bytes[7] = 0xFF;
+        
+        //dumpInstruction(ins);
+
+        return ins;
+    }
+
+    // ------------------------------------------------------------------------
     // createMovInstruction
     // ------------------------------------------------------------------------
 
@@ -740,6 +764,27 @@ namespace NABLA
     {
         Instruction ins;
         ins.bytes[0] = NABLA::VSYS::INS_RET;
+        ins.bytes[1] = 0xFF;
+        ins.bytes[2] = 0xFF;
+        ins.bytes[3] = 0xFF;
+        ins.bytes[4] = 0xFF;
+        ins.bytes[5] = 0xFF;
+        ins.bytes[6] = 0xFF;
+        ins.bytes[7] = 0xFF;
+
+        //dumpInstruction(ins);
+        
+        return ins;
+    }
+
+    // ------------------------------------------------------------------------
+    // createReturnInstruction
+    // ------------------------------------------------------------------------
+
+    Bytegen::Instruction Bytegen::createAtReturnInstruction()
+    {
+        Instruction ins;
+        ins.bytes[0] = NABLA::VSYS::INS_AT_RET;
         ins.bytes[1] = 0xFF;
         ins.bytes[2] = 0xFF;
         ins.bytes[3] = 0xFF;
