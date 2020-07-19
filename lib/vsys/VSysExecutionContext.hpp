@@ -58,6 +58,14 @@ namespace VSYS
 
             // Jump stack for the current function context
             std::stack<uint64_t> jumpStack;
+
+            //  Items below this in the structure are for supportin recursion in the VM
+            //
+            bool    recursion_flag;
+            int64_t recursion_counter;
+            std::stack< uint64_t > instruction_pointer_history;
+            std::stack< std::stack<uint64_t> > jump_history;
+            std::stack< Memory<NABLA_VSYS_SETTINGS_LOCAL_MEMORY_BYTES> > function_memory_history;
         };
 
         // Functions wrapped with context info for execution within the current

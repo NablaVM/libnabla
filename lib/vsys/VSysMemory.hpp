@@ -39,6 +39,13 @@ namespace VSYS
             memory.clear();
         }
 
+        //! \brief Reset the memory object
+        void reset()
+        {
+            memory.clear();
+            data_back = 0;
+        }
+
         //! \brief Check if memory contains data placed by system
         //! \returns True if data has been placed, False otherwise
         bool hasData() const
