@@ -216,6 +216,9 @@ namespace
     bool isParserVerbose;
 
     std::vector<std::string> rawFile;
+
+    std::map<std::string, uint64_t> globalShortcuts; // For keying #globalVar.start, and #globalVar.end
+    uint64_t globalMemoryIdx;
 }
 
 void populate_parser_map()
@@ -645,6 +648,8 @@ void initialize_assembler(bool verbosity)
     // Set verbosity
     isParserVerbose = verbosity;
 
+    globalMemoryIdx = 0;
+
     populate_parser_map();
 
     // Mark the entry point as undefined to start
@@ -868,8 +873,42 @@ inline bool isDirectNumericalInRange(std::string numerical)
 //
 // -----------------------------------------------
 
-inline bool isDirectNumerical(std::string piece)
+inline void checkForGlobalShort(std::string &piece)
 {
+    // Ensure it is one
+    if(!std::regex_match(piece, std::regex("^\\#.*")))
+    {
+        return;
+    }
+
+    // Check for proper form
+    if(std::regex_match(piece, std::regex("^\\#[a-zA-Z_0-9]+\\:(start|end)$")))
+    {
+        // See if it exists
+        if(globalShortcuts.find(piece) == globalShortcuts.end())
+        {
+            std::cerr << "Global shortcut \"" << piece << "\" was not found" << std::endl;
+            exit(EXIT_FAILURE);
+        }
+
+        // Update it if it does
+        piece = "$" + std::to_string(globalShortcuts[piece]);
+    }
+    else
+    {
+        std::cerr << "Misformed global shortcut : " << piece << std::endl;
+        exit(EXIT_FAILURE);
+    }
+}
+
+// -----------------------------------------------
+//
+// -----------------------------------------------
+
+inline bool isDirectNumerical(std::string & piece)
+{
+    checkForGlobalShort(piece);
+
     if(std::regex_match(piece, std::regex("(^\\$[0-9]+$)|(^\\$\\-[0-9]+$)")))
     {
         return isDirectNumericalInRange(piece);
@@ -881,12 +920,16 @@ inline bool isDirectNumerical(std::string piece)
 //
 // -----------------------------------------------
 
-inline bool isLargeDirectNumerical(std::string piece)
+inline bool isLargeDirectNumerical(std::string & piece)
 {
+    checkForGlobalShort(piece);
+
     if(std::regex_match(piece, std::regex("(^\\$[0-9]+$)|(^\\$\\-[0-9]+$)")))
     {
         std::string integerStr = piece.substr(1, piece.size());
+
         int64_t n = std::stoll(integerStr);
+
         return ( n < std::numeric_limits<int32_t>::max() && n > std::numeric_limits<int32_t>::min() );
     }
     return false;
@@ -899,15 +942,6 @@ inline bool isLargeDirectNumerical(std::string piece)
 inline bool isDirectNumericalDouble(std::string piece)
 {
     return std::regex_match(piece, std::regex("^\\$[0-9]+.[0-9]+$"));
-}
-
-// -----------------------------------------------
-//
-// -----------------------------------------------
-
-inline bool isReferencedConstant(std::string piece)
-{
-    return std::regex_match(piece, std::regex("^\\&[a-zA-Z_0-9]+$"));
 }
 
 // -----------------------------------------------
@@ -951,6 +985,16 @@ inline uint32_t getConstIndex(std::string name)
         i++;
     }
     return i;
+}
+
+inline void addNewShortcut(std::string name, uint64_t len)
+{
+        // Add shortcut
+        globalShortcuts["#" + name + ":start"] = globalMemoryIdx;
+
+        globalShortcuts["#" + name + ":end"]   = globalMemoryIdx + len;
+
+        globalMemoryIdx += len + 1;
 }
 
 // -----------------------------------------------
@@ -2261,6 +2305,9 @@ bool instruction_directive()
 
         // Store it
         finalPayload.constants.push_back({currentPieces[1], nablaByteGen.createConstantString(str)});
+
+        // Add new shortcut
+        addNewShortcut(currentPieces[1], currentPieces[1].size());
     }
 
     // ----------------------------------------------------------------------
@@ -2311,6 +2358,9 @@ bool instruction_directive()
                 return false;
             } 
             integerType = NABLA::Bytegen::Integers::EIGHT;  
+                
+            // Short cut it
+            addNewShortcut(currentPieces[1], 1);
         }
         else if(currentPieces[0] == ".int16")
         { 
@@ -2320,6 +2370,9 @@ bool instruction_directive()
                 return false;
             } 
             integerType = NABLA::Bytegen::Integers::SIXTEEN; 
+                
+            // Short cut it
+            addNewShortcut(currentPieces[1], 2);
         }
         else if(currentPieces[0] == ".int32")
         { 
@@ -2329,6 +2382,9 @@ bool instruction_directive()
                 return false;
             } 
             integerType = NABLA::Bytegen::Integers::THIRTY_TWO; 
+            
+            // Short cut it
+            addNewShortcut(currentPieces[1], 4);
         }
         else if(currentPieces[0] == ".int64")
         { 
@@ -2338,6 +2394,9 @@ bool instruction_directive()
                 return false;
             } 
             integerType = NABLA::Bytegen::Integers::SIXTY_FOUR; 
+
+            // Short cut it
+            addNewShortcut(currentPieces[1], 8);
         }
         else {
             std::cerr << "Unknown interger type that was matched : " << currentLine << std::endl;
@@ -2398,6 +2457,9 @@ bool instruction_directive()
 
         // Store it
         finalPayload.constants.push_back({currentPieces[1], nablaByteGen.createConstantDouble(givenDouble)});
+
+        // Short cut it
+        addNewShortcut(currentPieces[1], 8);
     }
     // ----------------------------------------------------------------------
     //  Undefined directive
